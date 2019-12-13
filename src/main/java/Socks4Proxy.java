@@ -9,7 +9,9 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.channels.spi.SelectorProvider;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -72,6 +74,8 @@ public class Socks4Proxy implements Runnable {
      * будет добавить некий KeyChangeRequest, но нам в этом приложение это без
      * надобности
      */
+    List<SocketChannel> channelList = new ArrayList<>();
+
     public void run() {
         try {
             // Создаём Selector
@@ -86,6 +90,26 @@ public class Socks4Proxy implements Runnable {
             serverChannel.register(selector, serverChannel.validOps());
             // Основной цикл работу неблокирующего сервер
             // Этот цикл будет одинаковым для практически любого неблокирующего
+//            new Thread(() -> {
+//                while (true){
+//                    Iterator<SocketChannel> it = channelList.iterator();
+//                    while (it.hasNext()){
+//                        SocketChannel tmp = it.next();
+//                        try {
+//                            String local = tmp.getLocalAddress().toString();
+//                            String remote = tmp.getRemoteAddress().toString();
+//                            System.out.print("");
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    try {
+//                        Thread.sleep(1000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }).start();
             // сервера
             while (selector.select() > -1) {
                 // Получаем ключи на которых произошли события в момент
@@ -93,6 +117,7 @@ public class Socks4Proxy implements Runnable {
                 Iterator<SelectionKey> iterator = selector.selectedKeys().iterator();
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();
+
                     iterator.remove();
                     if (key.isValid()) {
                         // Обработка всех возможнных событий ключа
@@ -105,8 +130,8 @@ public class Socks4Proxy implements Runnable {
                                 connect(key);
                             } else if (key.isReadable()) {
                                 // Читаем данные
-                                ByteBuffer buffer = ByteBuffer.allocate(256);
-                                answerWithEcho(buffer,key);
+                                ByteBuffer buffer = ByteBuffer.allocate(1024);
+                                answerWithEcho(buffer, key);
                                 read(key);
                             } else if (key.isWritable()) {
                                 // Пишем данные
@@ -137,18 +162,30 @@ public class Socks4Proxy implements Runnable {
     private void accept(SelectionKey key) throws IOException, ClosedChannelException {
         // Приняли
         SocketChannel newChannel = ((ServerSocketChannel) key.channel()).accept();
+        channelList.add(newChannel);
+
+        System.out.println("accept\t" + newChannel.getLocalAddress() + "\t" + newChannel.getRemoteAddress());
         // Неблокирующий
         newChannel.configureBlocking(false);
         // Регистрируем в селекторе
         newChannel.register(key.selector(), SelectionKey.OP_READ);
+
+        ByteBuffer buffer = ByteBuffer.allocate(256);
+        buffer.put("OK".getBytes());
+        buffer.flip();
+        newChannel.write(buffer);
+        buffer.clear();
     }
 
     private static void answerWithEcho(ByteBuffer buffer, SelectionKey key)
             throws IOException {
 
         SocketChannel client = (SocketChannel) key.channel();
+
         client.read(buffer);
         System.out.println(new String(buffer.array()));
+
+
         String str = new String(buffer.array());
         if (new String(buffer.array()).trim().equals("DUDOS")) {
             client.close();

@@ -4,27 +4,28 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.time.LocalDateTime;
 
 public class EchoClient {
-    private static SocketChannel client;
-    private static ByteBuffer buffer;
-    private static EchoClient instance;
+    private SocketChannel client;
+    private ByteBuffer buffer;
+    private EchoClient instance;
 
-    public static EchoClient start() {
-        if (instance == null)
-            instance = new EchoClient();
 
-        return instance;
+    public static void main(String[] args) {
+        EchoClient echoClient = new EchoClient();
+        echoClient.startReadThread();
+        echoClient.sendMessage("zdarova blyt");
     }
 
-    public static void stop() throws IOException {
+    public void stop() throws IOException {
         client.close();
         buffer = null;
     }
 
     private EchoClient() {
         try {
-            client = SocketChannel.open(new InetSocketAddress("localhost", 5454));
+            client = SocketChannel.open(new InetSocketAddress("localhost", 3443));
             buffer = ByteBuffer.allocate(256);
         } catch (IOException e) {
             e.printStackTrace();
@@ -37,15 +38,33 @@ public class EchoClient {
         try {
             client.write(buffer);
             buffer.clear();
-            client.read(buffer);
-            response = new String(buffer.array()).trim();
-            response = response.toUpperCase();
-            System.out.println("response=" + response);
-            buffer.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
         return response;
 
+    }
+
+    public void startReadThread() {
+        System.out.println("startReadThread");
+        new Thread(() -> {
+            while (true) {
+                try {
+                    client.read(buffer);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String response = new String(buffer.array()).trim();
+                System.out.println("[" + (LocalDateTime.now().toLocalTime().toString()) + "]" +
+                        "i got = " + response);
+                buffer.clear();
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }).start();
     }
 }
