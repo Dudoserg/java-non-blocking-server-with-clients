@@ -72,21 +72,30 @@ public class EchoServer implements Runnable {
         new Thread(() -> {
             while (true) {
                 if (this.channelList.size() > 0) {
+                    // Создаем буфер
                     ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                     String str = LocalDateTime.now().toLocalTime().toString();
+                    // пихаем туда строку
                     byteBuffer.put(str.getBytes());
+                    // НА начало буфера переходим
                     byteBuffer.flip();
+                    // Итератор по клиентам
                     Iterator<SocketChannel> it = channelList.iterator();
+                    // ПРоходимся по всем клиентам
                     while (it.hasNext()) {
+                        // очередной клиент
                         SocketChannel socketChannel = it.next();
+                        // Если клиент открыт
                         if (socketChannel.isOpen()) {
                             try {
+                                // Пишем в него
                                 socketChannel.write(byteBuffer);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                             byteBuffer.flip();
                         } else {
+                            // Удаляем клиента из channelList, т.к. он закрыт
                             it.remove();
                             System.out.println("Клиент закрыт, Удаляем из списка");
                         }
@@ -98,11 +107,9 @@ public class EchoServer implements Runnable {
 //                            e.printStackTrace();
 //                        }
                     }
-
                 }
-
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1999);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -110,9 +117,12 @@ public class EchoServer implements Runnable {
         }).start();
 
         try {
+            // Ждем очередного события
             while (selector.select() > -1) {
 
+                // Ключи событий
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
+                // Итератор по этим ключам( в них вроде находятся клиенты наши )
                 Iterator<SelectionKey> iter = selectedKeys.iterator();
 
                 while (iter.hasNext()) {
@@ -125,7 +135,7 @@ public class EchoServer implements Runnable {
 
                     if (key.isReadable()) {
                         // Проверяем, не отвалился ли клиент, если происходит отвал
-                            // То сообщение будет пустым
+                        // То сообщение будет пустым
                         ByteBuffer buff = ByteBuffer.allocate(32);
                         SocketChannel socketChannel = (SocketChannel) key.channel();
                         SocketChannel client = (SocketChannel) key.channel();
@@ -143,12 +153,17 @@ public class EchoServer implements Runnable {
                         }
 
                         answerWithEcho(buffer, key);
+
                     } else if (key.isWritable()) {
+
                         //answerWithEcho(buffer, key);
                         System.out.println();
+
                     } else if (key.isConnectable()) {
+
                         //answerWithEcho(buffer, key);
                         System.out.println();
+
                     }
 
                     iter.remove();
@@ -196,6 +211,8 @@ public class EchoServer implements Runnable {
         buffer.clear();
     }
 
+//    Метод start () определен так, что эхо-сервер может быть
+//    запущен как отдельный процесс во время модульного тестирования.
     public static Process start() throws IOException, InterruptedException {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";
