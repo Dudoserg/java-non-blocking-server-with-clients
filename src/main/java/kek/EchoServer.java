@@ -1,6 +1,8 @@
-package baeldung;
+package kek;
 
-import baeldung.message.MessConfirm;
+import kek.message.MessConfirm;
+import kek.message.MessageType;
+import kek.message.MessageWrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +40,7 @@ public class EchoServer implements Runnable {
     private static final String POISON_PILL = "POISON_PILL";
 
     List<Client> clients_list = new ArrayList<>();
-    HashMap<SocketChannel, Client>  clients_map = new HashMap<SocketChannel, Client>();
+    HashMap<SocketChannel, Client> clients_map = new HashMap<SocketChannel, Client>();
 
     public static void main(String[] args) {
         EchoServer echoServer = new EchoServer();
@@ -62,18 +64,45 @@ public class EchoServer implements Runnable {
             e.printStackTrace();
         }
     }
-
+    Thread test;
     @Override
     public void run() {
         System.out.println("start server");
+         test = new Thread(() ->{
+            synchronized(this) {
+                while (true){
+                    System.out.println(123);
+                    try {
+                        this.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        test.start();
+        // GC мусор
+        new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(20000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.gc();
+            }
+        }).start();
+
         // В данном потоке рассылка всем клиентам времени каждые 2 секунды
         new Thread(() -> {
             while (true) {
                 if (this.clients_list.size() > 0) {
+
                     // Создаем буфер
                     ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                     String str = LocalDateTime.now().toLocalTime().toString();
                     // пихаем туда строку
+                    byteBuffer.clear();
                     byteBuffer.put(str.getBytes());
                     // НА начало буфера переходим
                     byteBuffer.flip();
@@ -82,29 +111,32 @@ public class EchoServer implements Runnable {
                     // ПРоходимся по всем клиентам
                     while (it.hasNext()) {
                         // очередной клиент
-                        Client сlient = it.next();
-                        SocketChannel socketChannel = сlient.getSocketChannel();
-                        // Если клиент открыт
-                        if (socketChannel.isOpen()) {
-//                            // Отправляем сообщение клиенту
-//                            try {
-//                                // Пишем в него
-//                                socketChannel.write(byteBuffer);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//                            byteBuffer.flip();
-                        } else {
-                            // Закрываем сокет клиента, ХЗ надо ли
-                            try {
-                                сlient.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                        Client client = it.next();
+                        SocketChannel socketChannel = client.getSocketChannel();
+
+                        // Если клиент готов к передаче
+                        if( client.isClientNotified() ){
+                            // Если клиент открыт
+                            if (socketChannel.isOpen() ) {
+                                // Отправляем сообщение клиенту
+                                try {
+                                    // Пишем в него
+                                    socketChannel.write(byteBuffer);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                byteBuffer.flip();
+                            } else {
+                                // Закрываем сокет клиента, ХЗ надо ли
+                                try {
+                                    client.close();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                // Удаляем клиента из clients_list, т.к. он закрыт
+                                it.remove();
+                                System.out.println("Клиент #" + client.getPort() + " закрыт, Удаляем из списка");
                             }
-                            // Удаляем клиента из clients_list, т.к. он закрыт
-                            it.remove();
-                            System.out.println("Клиент #" + сlient.getPort() + " закрыт, Удаляем из списка");
-                        }
 //                        try {
 //
 //                        } catch (ClosedChannelException e) {
@@ -112,6 +144,7 @@ public class EchoServer implements Runnable {
 //                        } catch (IOException e) {
 //                            e.printStackTrace();
 //                        }
+                        }
                     }
                 }
                 try {
@@ -149,7 +182,7 @@ public class EchoServer implements Runnable {
                             client.read(buffer);
                         } catch (IOException e) {
                             // Закрываем клиента, и удаляем его из списка
-                            System.out.println("Клиент #" + clients_map.get(socketChannel).getPort() +  " отвалился, закрываем");
+                            System.out.println("Клиент #" + clients_map.get(socketChannel).getPort() + " отвалился, закрываем");
                             // удаляем из списка
                             clients_list.remove(socketChannel);
                             // закрываем
@@ -200,42 +233,61 @@ public class EchoServer implements Runnable {
 
         // Отправляем ему OK
         ByteBuffer buffer = ByteBuffer.allocate(1024);
+
         MessConfirm messConfirm =
                 MessConfirm.builder("OK", myClient.getPort())
                         .build();
-        String message_str = messConfirm.serialize();
 
-        buffer.put(message_str.getBytes());
+        MessageWrapper messageWrapper =
+                MessageWrapper.builder()
+                        .str(messConfirm.serialize())
+                        .messageType(MessageType.MESSAGE_CONFIRM)
+                        .toPort(myClient.getPort()).build();
+
+
+        String str = messageWrapper.serialize();
+        System.out.println();
+        buffer.put(str.getBytes());
         buffer.flip();
         socketChannel.write(buffer);
         buffer.clear();
     }
 
     private boolean read(ByteBuffer buffer, SelectionKey key) throws IOException {
-        SocketChannel client = (SocketChannel) key.channel();
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        Client client = clients_map.get(socketChannel);
 
-        client.read(buffer);
-        String message_str = new String(buffer.array()).split("\u0000")[0];
+        socketChannel.read(buffer);
+        String message_str = new String(buffer.array());
 
-        Client tmp = clients_map.get(client);
+        System.out.println("i got " + message_str + "\n\tfrom client #" + client.getPort());
 
-        System.out.println("i got " + message_str + "\n\tfrom client #" + tmp.getPort());
+        MessageWrapper messageWrapper =
+                MessageWrapper.deserialize(message_str);
 
-        MessConfirm messConfirm =
-                MessConfirm.deserialize(message_str);
+        switch (messageWrapper.getMessageType()) {
+            // Если клиент еще не до конца зарегестрирован, и пришло сообщение с подтверждением
+            case MESSAGE_CONFIRM: {
+                // Вытаскиваем сообщение о подтверждении
+                MessConfirm messConfirm = messageWrapper.getMessConfirm();
 
-        // Если клиент еще не до конца зарегестрирован
-        if (!tmp.isClientNotified()){
-            // Если он правильно запомнил его порт
-            if(tmp.getPort().equals(messConfirm.getPort())) {
-                // ЗНАЧИТ
-                // Клиент уведомлен об его айди
-                tmp.setClientNotified(true);
-                // Запоминаем Тип клиента
-                tmp.setPersonType(messConfirm.getPersonType());
+                if (!client.isClientNotified()) {
+                    // Если он правильно запомнил его порт
+                    if (client.getPort().equals(messConfirm.getPort())) {
+                        // ЗНАЧИТ
+                        // Клиент уведомлен об его айди
+                        client.setClientNotified(true);
+                        // Запоминаем Тип клиента
+                        client.setPerson(messConfirm.getPerson());
+                        System.out.println("client #" + client.getPort() + " isClientNotified = true");
+                    }
+                }
+                break;
+            }
+            case MESSAGE: {
+                break;
             }
         }
-
 
         return true;
     }
@@ -259,9 +311,8 @@ public class EchoServer implements Runnable {
         return true;
     }
 
-
     //    Метод start () определен так, что эхо-сервер может быть
-//    запущен как отдельный процесс во время модульного тестирования.
+    //    запущен как отдельный процесс во время модульного тестирования.
     public static Process start() throws IOException, InterruptedException {
         String javaHome = System.getProperty("java.home");
         String javaBin = javaHome + File.separator + "bin" + File.separator + "java";

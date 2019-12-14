@@ -43,7 +43,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>baeldung.EchoClient</mainClass>
+                                    <mainClass>kek.EchoClient</mainClass>
                                 </manifest>
                             </archive>
                             <finalName>EchoClient</finalName>
@@ -71,7 +71,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>baeldung.EchoServer</mainClass>
+                                    <mainClass>kek.EchoServer</mainClass>
                                 </manifest>
                             </archive>
                             <finalName>Server</finalName>

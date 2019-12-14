@@ -1,4 +1,4 @@
-package baeldung.person;
+package kek.person;
 
 import lombok.*;
 

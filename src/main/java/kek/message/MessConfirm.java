@@ -1,8 +1,8 @@
-package baeldung.message;
+package kek.message;
 
-import baeldung.person.PersonType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kek.person.Person;
 import lombok.*;
 
 
@@ -15,7 +15,7 @@ import lombok.*;
 public class MessConfirm {
     private String message;
     private Integer port;
-    private PersonType personType;
+    private Person person;
 
     public MessConfirm(String message, Integer port) {
         this.message = message;

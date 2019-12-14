@@ -1,6 +1,6 @@
-package baeldung;
+package kek;
 
-import baeldung.person.PersonType;
+import kek.person.Person;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +22,7 @@ public class Client {
     private boolean clientNotified = false;   // Если true, то клиент активен, и знает свой id ( port )
 
     //
-    private PersonType personType;
+    private Person person;
 
     public Client(SocketChannel socketChannel) throws IOException {
         this.socketChannel = socketChannel;
