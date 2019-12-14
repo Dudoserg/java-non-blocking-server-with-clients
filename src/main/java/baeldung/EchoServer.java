@@ -1,18 +1,12 @@
 package baeldung;
 
-import sun.reflect.generics.scope.Scope;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
+import java.util.*;
 
 public class EchoServer implements Runnable {
     static class Attachment {
@@ -41,7 +35,8 @@ public class EchoServer implements Runnable {
 
     private static final String POISON_PILL = "POISON_PILL";
 
-    List<SocketChannel> channelList = new ArrayList<>();
+    List<Client> clients_list = new ArrayList<>();
+    HashMap<SocketChannel, Client>  clients_map = new HashMap<SocketChannel, Client>();
 
     public static void main(String[] args) {
         EchoServer echoServer = new EchoServer();
@@ -68,10 +63,11 @@ public class EchoServer implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("start server");
         // В данном потоке рассылка всем клиентам времени каждые 2 секунды
         new Thread(() -> {
             while (true) {
-                if (this.channelList.size() > 0) {
+                if (this.clients_list.size() > 0) {
                     // Создаем буфер
                     ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
                     String str = LocalDateTime.now().toLocalTime().toString();
@@ -80,22 +76,30 @@ public class EchoServer implements Runnable {
                     // НА начало буфера переходим
                     byteBuffer.flip();
                     // Итератор по клиентам
-                    Iterator<SocketChannel> it = channelList.iterator();
+                    Iterator<Client> it = clients_list.iterator();
                     // ПРоходимся по всем клиентам
                     while (it.hasNext()) {
                         // очередной клиент
-                        SocketChannel socketChannel = it.next();
+                        Client сlient = it.next();
+                        SocketChannel socketChannel = сlient.getSocketChannel();
                         // Если клиент открыт
                         if (socketChannel.isOpen()) {
+//                            // Отправляем сообщение клиенту
+//                            try {
+//                                // Пишем в него
+//                                socketChannel.write(byteBuffer);
+//                            } catch (IOException e) {
+//                                e.printStackTrace();
+//                            }
+//                            byteBuffer.flip();
+                        } else {
+                            // Закрываем сокет клиента, ХЗ надо ли
                             try {
-                                // Пишем в него
-                                socketChannel.write(byteBuffer);
+                                сlient.close();
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            byteBuffer.flip();
-                        } else {
-                            // Удаляем клиента из channelList, т.к. он закрыт
+                            // Удаляем клиента из clients_list, т.к. он закрыт
                             it.remove();
                             System.out.println("Клиент закрыт, Удаляем из списка");
                         }
@@ -130,10 +134,10 @@ public class EchoServer implements Runnable {
                     SelectionKey key = iter.next();
 
                     if (key.isAcceptable()) {
-                        register(selector, serverSocket);
-                    }
 
-                    if (key.isReadable()) {
+                        register(selector, serverSocket);
+
+                    } else if (key.isReadable()) {
                         // Проверяем, не отвалился ли клиент, если происходит отвал
                         // То сообщение будет пустым
                         ByteBuffer buff = ByteBuffer.allocate(32);
@@ -145,14 +149,14 @@ public class EchoServer implements Runnable {
                             // Закрываем клиента, и удаляем его из списка
                             System.out.println("Клиент отвалился, закрываем");
                             // удаляем из списка
-                            channelList.remove(socketChannel);
+                            clients_list.remove(socketChannel);
                             // закрываем
                             key.cancel();
                             socketChannel.close();
                             continue;
                         }
-
-                        answerWithEcho(buffer, key);
+                        read(buffer, key);
+                        //answerWithEcho(buffer, key);
 
                     } else if (key.isWritable()) {
 
@@ -178,6 +182,46 @@ public class EchoServer implements Runnable {
     }
 
 
+    /// Регистрация клиента
+    private void register(Selector selector, ServerSocketChannel serverSocket)
+            throws IOException {
+
+        SocketChannel socketChannel = serverSocket.accept();
+        socketChannel.configureBlocking(false);
+        socketChannel.register(selector, SelectionKey.OP_READ);
+
+        // Запоминаем  клиента При подключении
+        Client myClient = new Client(socketChannel);
+        //
+        clients_list.add(myClient);
+        clients_map.put(socketChannel, myClient);
+
+        // Отправляем ему OK
+        ByteBuffer buffer = ByteBuffer.allocate(256);
+        buffer.put(("OK-" + myClient.getPort()).getBytes());
+        buffer.flip();
+        socketChannel.write(buffer);
+        buffer.clear();
+    }
+
+    private boolean read(ByteBuffer buffer, SelectionKey key) throws IOException {
+        SocketChannel client = (SocketChannel) key.channel();
+
+        client.read(buffer);
+        String str = new String(buffer.array()).split("\u0000")[0];
+
+        Client tmp = clients_map.get(client);
+
+        System.out.println("i got " + str + " from client " + tmp.getPort());
+
+        String kek = "OK-" + tmp.getPort().toString();
+        if(str.equals(kek))
+            tmp.setIsClientNotified(true);
+
+        return true;
+    }
+
+
     private boolean answerWithEcho(ByteBuffer buffer, SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
 
@@ -196,22 +240,8 @@ public class EchoServer implements Runnable {
         return true;
     }
 
-    private void register(Selector selector, ServerSocketChannel serverSocket)
-            throws IOException {
 
-        SocketChannel client = serverSocket.accept();
-        channelList.add(client);
-        client.configureBlocking(false);
-        client.register(selector, SelectionKey.OP_READ);
-
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-        buffer.put("OK".getBytes());
-        buffer.flip();
-        client.write(buffer);
-        buffer.clear();
-    }
-
-//    Метод start () определен так, что эхо-сервер может быть
+    //    Метод start () определен так, что эхо-сервер может быть
 //    запущен как отдельный процесс во время модульного тестирования.
     public static Process start() throws IOException, InterruptedException {
         String javaHome = System.getProperty("java.home");
