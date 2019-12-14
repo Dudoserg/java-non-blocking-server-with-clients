@@ -2,13 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="05f428c4-f337-46e4-a505-542de7833f8e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/baeldung/Client.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/baeldung/message/MessConfirm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/baeldung/person/Person.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/baeldung/person/PersonType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/baeldung/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/baeldung/Client.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/baeldung/EchoClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/baeldung/EchoClient.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/baeldung/EchoServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/baeldung/EchoServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/baeldung/EchoTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/baeldung/EchoTest.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -20,18 +21,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/Server.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="72">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Socks4Proxy.java">
           <provider selected="true" editor-type-id="text-editor">
@@ -50,15 +39,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="209">
-              <caret line="217" selection-start-line="217" selection-end-line="217" />
+            <state relative-caret-position="223">
+              <caret line="226" column="54" lean-forward="true" selection-start-line="226" selection-start-column="54" selection-end-line="226" selection-end-column="54" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="class#Attachment#0;class#EchoServer#0" />
                 <element signature="e#1167#1190#0" expanded="true" />
-                <element signature="e#2083#4067#0" />
-                <element signature="e#2914#2975#0" />
-                <element signature="e#3552#3583#0" />
                 <element signature="method#close#0;class#EchoServer#0" />
               </folding>
             </state>
@@ -68,8 +54,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/Client.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="173">
-              <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+            <state relative-caret-position="191">
+              <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -78,10 +64,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoTest.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/message/MessConfirm.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="414">
-              <caret line="29" column="12" selection-start-line="29" selection-start-column="12" selection-end-line="29" selection-end-column="12" />
+            <state relative-caret-position="141">
+              <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -90,12 +76,13 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoClient.java">
+        <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1170">
-              <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+            <state relative-caret-position="195">
+              <caret line="92" column="8" selection-start-line="92" selection-start-column="8" selection-end-line="122" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="n#plugin#1;n#plugins#0;n#build#0;n#project#0;n#!!top" />
+                <element signature="n#plugin#2;n#plugins#0;n#build#0;n#project#0;n#!!top" />
               </folding>
             </state>
           </provider>
@@ -123,7 +110,15 @@
       <find>close</find>
       <find>allo</find>
       <find>OK</find>
+      <find>Message</find>
+      <find>Message</find>
+      <find>256</find>
+      <find>getClientNotified</find>
     </findStrings>
+    <replaceStrings>
+      <replace>MessageRegistrationConfirm</replace>
+      <replace>1024</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -136,9 +131,13 @@
         <option value="$PROJECT_DIR$/src/main/java/Socks4Proxy.java" />
         <option value="$PROJECT_DIR$/src/main/java/baeldung/EchoClient.java" />
         <option value="$PROJECT_DIR$/src/main/java/baeldung/EchoTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/baeldung/Message/MessageRegistrationConfirm.java" />
+        <option value="$PROJECT_DIR$/src/main/java/baeldung/person/PersonType.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/src/main/java/baeldung/Client.java" />
+        <option value="$PROJECT_DIR$/src/main/java/baeldung/message/MessageRegistrationConfirm.java" />
         <option value="$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/baeldung/message/MessConfirm.java" />
       </list>
     </option>
   </component>
@@ -196,6 +195,15 @@
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="baeldung" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="server_select" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server_select" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="baeldung" type="462c0819:PsiDirectoryNode" />
+              <item name="message" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -205,7 +213,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576326481877" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576328961657" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -213,6 +221,11 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Dudoserg\IdeaProjects\server_select\src\main\java\baeldung\person" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -281,7 +294,7 @@
       <option name="presentableId" value="Default" />
       <updated>1576250992077</updated>
       <workItem from="1576250997182" duration="16455000" />
-      <workItem from="1576321823537" duration="3364000" />
+      <workItem from="1576321823537" duration="5888000" />
     </task>
     <task id="LOCAL-00001" summary="СЛОЖНА">
       <created>1576270171294</created>
@@ -311,7 +324,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576310698039</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Назначение клиенту id при конекшене">
+      <created>1576326548188</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1576326548188</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -347,12 +367,13 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="19819000" />
+    <option name="totallyTimeSpent" value="22343000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16066837" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16066837" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -362,7 +383,7 @@
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32974428" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.3835801" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3781965" />
+      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.3781965" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -392,7 +413,8 @@
     <MESSAGE value="СЛОЖНА2" />
     <MESSAGE value="изменил клиента, запускается без тестов" />
     <MESSAGE value="сервер коменты" />
-    <option name="LAST_COMMIT_MESSAGE" value="сервер коменты" />
+    <MESSAGE value="Назначение клиенту id при конекшене" />
+    <option name="LAST_COMMIT_MESSAGE" value="Назначение клиенту id при конекшене" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -417,15 +439,9 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java</url>
-          <line>218</line>
+          <line>227</line>
           <properties />
-          <option name="timeStamp" value="64" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java</url>
-          <line>217</line>
-          <properties />
-          <option name="timeStamp" value="65" />
+          <option name="timeStamp" value="66" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -499,31 +515,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="557">
-          <caret line="60" column="19" selection-start-line="60" selection-start-column="19" selection-end-line="60" selection-end-column="19" />
-          <folding>
-            <element signature="n#plugin#1;n#plugins#0;n#build#0;n#project#0;n#!!top" />
-            <element signature="n#plugin#2;n#plugins#0;n#build#0;n#project#0;n#!!top" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/net/SocketAddress.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="236">
           <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Server.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -547,19 +542,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Socks4Proxy.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="656">
-          <caret line="137" column="43" selection-start-line="137" selection-start-column="43" selection-end-line="137" selection-end-column="43" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="class#Attachment#0;class#Socks4Proxy#0" />
-            <element signature="e#2852#2897#0" />
-            <element signature="method#answerWithEcho#0;class#Socks4Proxy#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/nio/channels/SelectionKey.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -573,10 +555,60 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Server.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Socks4Proxy.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="656">
+          <caret line="137" column="43" selection-start-line="137" selection-start-column="43" selection-end-line="137" selection-end-column="43" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="class#Attachment#0;class#Socks4Proxy#0" />
+            <element signature="e#2852#2897#0" />
+            <element signature="method#answerWithEcho#0;class#Socks4Proxy#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/person/PersonType.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/person/Person.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="92" column="8" selection-start-line="92" selection-start-column="8" selection-end-line="122" />
+          <folding>
+            <element signature="n#plugin#1;n#plugins#0;n#build#0;n#project#0;n#!!top" />
+            <element signature="n#plugin#2;n#plugins#0;n#build#0;n#project#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/message/MessConfirm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/Client.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="31" column="20" selection-start-line="31" selection-start-column="20" selection-end-line="31" selection-end-column="20" />
+        <state relative-caret-position="191">
+          <caret line="16" column="21" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -585,15 +617,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="217" selection-start-line="217" selection-end-line="217" />
+        <state relative-caret-position="223">
+          <caret line="226" column="54" lean-forward="true" selection-start-line="226" selection-start-column="54" selection-end-line="226" selection-end-column="54" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="class#Attachment#0;class#EchoServer#0" />
             <element signature="e#1167#1190#0" expanded="true" />
-            <element signature="e#2083#4067#0" />
-            <element signature="e#2914#2975#0" />
-            <element signature="e#3552#3583#0" />
             <element signature="method#close#0;class#EchoServer#0" />
           </folding>
         </state>

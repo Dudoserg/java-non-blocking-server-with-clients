@@ -1,5 +1,7 @@
 package baeldung;
 
+import baeldung.message.MessConfirm;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -55,7 +57,7 @@ public class EchoServer implements Runnable {
             serverSocket.bind(new InetSocketAddress("localhost", 3443));
             serverSocket.configureBlocking(false);
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            buffer = ByteBuffer.allocate(256);
+            buffer = ByteBuffer.allocate(1024);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +103,7 @@ public class EchoServer implements Runnable {
                             }
                             // Удаляем клиента из clients_list, т.к. он закрыт
                             it.remove();
-                            System.out.println("Клиент закрыт, Удаляем из списка");
+                            System.out.println("Клиент #" + сlient.getPort() + " закрыт, Удаляем из списка");
                         }
 //                        try {
 //
@@ -147,7 +149,7 @@ public class EchoServer implements Runnable {
                             client.read(buffer);
                         } catch (IOException e) {
                             // Закрываем клиента, и удаляем его из списка
-                            System.out.println("Клиент отвалился, закрываем");
+                            System.out.println("Клиент #" + clients_map.get(socketChannel).getPort() +  " отвалился, закрываем");
                             // удаляем из списка
                             clients_list.remove(socketChannel);
                             // закрываем
@@ -197,8 +199,13 @@ public class EchoServer implements Runnable {
         clients_map.put(socketChannel, myClient);
 
         // Отправляем ему OK
-        ByteBuffer buffer = ByteBuffer.allocate(256);
-        buffer.put(("OK-" + myClient.getPort()).getBytes());
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        MessConfirm messConfirm =
+                MessConfirm.builder("OK", myClient.getPort())
+                        .build();
+        String message_str = messConfirm.serialize();
+
+        buffer.put(message_str.getBytes());
         buffer.flip();
         socketChannel.write(buffer);
         buffer.clear();
@@ -208,15 +215,27 @@ public class EchoServer implements Runnable {
         SocketChannel client = (SocketChannel) key.channel();
 
         client.read(buffer);
-        String str = new String(buffer.array()).split("\u0000")[0];
+        String message_str = new String(buffer.array()).split("\u0000")[0];
 
         Client tmp = clients_map.get(client);
 
-        System.out.println("i got " + str + " from client " + tmp.getPort());
+        System.out.println("i got " + message_str + "\n\tfrom client #" + tmp.getPort());
 
-        String kek = "OK-" + tmp.getPort().toString();
-        if(str.equals(kek))
-            tmp.setIsClientNotified(true);
+        MessConfirm messConfirm =
+                MessConfirm.deserialize(message_str);
+
+        // Если клиент еще не до конца зарегестрирован
+        if (!tmp.isClientNotified()){
+            // Если он правильно запомнил его порт
+            if(tmp.getPort().equals(messConfirm.getPort())) {
+                // ЗНАЧИТ
+                // Клиент уведомлен об его айди
+                tmp.setClientNotified(true);
+                // Запоминаем Тип клиента
+                tmp.setPersonType(messConfirm.getPersonType());
+            }
+        }
+
 
         return true;
     }

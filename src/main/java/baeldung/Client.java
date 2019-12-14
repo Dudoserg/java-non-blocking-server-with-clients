@@ -1,5 +1,6 @@
 package baeldung;
 
+import baeldung.person.PersonType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,10 @@ public class Client {
     // Уведомлен ли клиент о своем id
     // Для этого при подключении клиента сервер отправляет OK-port
     // Клиент отвечает OK-port, в таком случае клиент уведомлен
-    private Boolean isClientNotified = false;   // Если true, то клиент активен, и знает свой id ( port )
+    private boolean clientNotified = false;   // Если true, то клиент активен, и знает свой id ( port )
+
+    //
+    private PersonType personType;
 
     public Client(SocketChannel socketChannel) throws IOException {
         this.socketChannel = socketChannel;
