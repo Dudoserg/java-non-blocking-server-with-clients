@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="05f428c4-f337-46e4-a505-542de7833f8e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Socks4Proxy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Socks4Proxy.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/baeldung/EchoClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/baeldung/EchoClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Socks4Proxy$Attachment.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Socks4Proxy$Attachment.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Socks4Proxy.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Socks4Proxy.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/baeldung/EchoClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/baeldung/EchoClient.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/baeldung/EchoServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/baeldung/EchoServer.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -36,8 +30,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/Socks4Proxy.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="132" selection-start-line="132" selection-end-line="133" />
+            <state relative-caret-position="704">
+              <caret line="137" column="43" lean-forward="true" selection-start-line="137" selection-start-column="43" selection-end-line="137" selection-end-column="43" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="class#Attachment#0;class#Socks4Proxy#0" />
@@ -49,10 +43,16 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Infa">
+        <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="67" selection-start-line="2" selection-start-column="67" selection-end-line="2" selection-end-column="67" />
+            <state relative-caret-position="166">
+              <caret line="74" column="68" selection-start-line="74" selection-start-column="64" selection-end-line="74" selection-end-column="68" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="class#Attachment#0;class#EchoServer#0" />
+                <element signature="e#2775#2806#0" />
+                <element signature="method#close#0;class#EchoServer#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -60,25 +60,10 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoClient.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1242">
-              <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+            <state relative-caret-position="191">
+              <caret line="48" column="39" selection-start-line="48" selection-start-column="39" selection-end-line="48" selection-end-column="39" />
               <folding>
                 <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="274">
-              <caret line="138" column="40" selection-start-line="138" selection-start-column="40" selection-end-line="138" selection-end-column="40" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="class#Attachment#0;class#EchoServer#0" />
-                <element signature="e#2775#2806#0" />
-                <element signature="method#close#0;class#EchoServer#0" />
               </folding>
             </state>
           </provider>
@@ -199,7 +184,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576270149224" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576310150936" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -274,8 +259,16 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1576250992077</updated>
-      <workItem from="1576250997182" duration="13684000" />
+      <workItem from="1576250997182" duration="14292000" />
     </task>
+    <task id="LOCAL-00001" summary="СЛОЖНА">
+      <created>1576270171294</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1576270171294</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -311,7 +304,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="13684000" />
+    <option name="totallyTimeSpent" value="14292000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
@@ -351,6 +344,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="СЛОЖНА" />
+    <option name="LAST_COMMIT_MESSAGE" value="СЛОЖНА" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -400,13 +397,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="11" column="20" lean-forward="true" selection-start-line="11" selection-start-column="20" selection-end-line="11" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Infa">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="67" selection-start-line="2" selection-start-column="67" selection-end-line="2" selection-end-column="67" />
         </state>
       </provider>
     </entry>
@@ -501,10 +491,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Infa">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="67" selection-start-line="2" selection-start-column="67" selection-end-line="2" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Socks4Proxy.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="132" selection-start-line="132" selection-end-line="133" />
+        <state relative-caret-position="704">
+          <caret line="137" column="43" lean-forward="true" selection-start-line="137" selection-start-column="43" selection-end-line="137" selection-end-column="43" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="class#Attachment#0;class#Socks4Proxy#0" />
@@ -516,8 +513,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="138" column="40" selection-start-line="138" selection-start-column="40" selection-end-line="138" selection-end-column="40" />
+        <state relative-caret-position="166">
+          <caret line="74" column="68" selection-start-line="74" selection-start-column="64" selection-end-line="74" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="class#Attachment#0;class#EchoServer#0" />
@@ -529,8 +526,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/baeldung/EchoClient.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1242">
-          <caret line="69" column="1" selection-start-line="69" selection-start-column="1" selection-end-line="69" selection-end-column="1" />
+        <state relative-caret-position="191">
+          <caret line="48" column="39" selection-start-line="48" selection-start-column="39" selection-end-line="48" selection-end-column="39" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

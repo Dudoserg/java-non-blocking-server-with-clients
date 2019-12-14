@@ -163,12 +163,7 @@ public class EchoServer implements Runnable {
     }
 
 
-    private boolean answerWithEcho(ByteBuffer buffer, SelectionKey key)
-            throws IOException {
-        ByteBuffer buff = ByteBuffer.allocate(1024);
-        SocketChannel socketChannel = (SocketChannel) key.channel();
-
-
+    private boolean answerWithEcho(ByteBuffer buffer, SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
 
         client.read(buffer);
