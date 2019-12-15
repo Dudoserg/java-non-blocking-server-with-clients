@@ -2,15 +2,13 @@ package kek.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kek.message.MessConfirm;
-import kek.message.Message;
-import kek.message.MessageType;
-import kek.message.MessageWrapper;
+import kek.message.*;
 import lombok.*;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.List;
 
 @Getter
 @Setter
@@ -85,7 +83,8 @@ public class Person {
 //        return send();
 //    }
     @JsonIgnore
-    public String sendMessConfirm(MessConfirm obj) throws JsonProcessingException {
+    public String sendMessConfirm(MessConfirm obj)
+            throws JsonProcessingException {
 
         String tmp = obj.serialize();
 
@@ -94,6 +93,28 @@ public class Person {
                 .builder()
                 .str(tmp)
                 .messageType(MessageType.MESSAGE_CONFIRM)
+                .fromPerson(this)
+                .fromPort(this.port)
+                .build();
+
+        // Сериализуем и отправляем сообщение на сервер
+        String msg = messageWrapper.serialize();
+
+
+        return send(msg);
+    }
+
+    @JsonIgnore
+    public String sendMessageFreeForPersonType(MessageFreeForPersonType obj)
+            throws JsonProcessingException {
+
+        String tmp = obj.serialize();
+
+        // Заворачиваем Сообщение в обертку
+        MessageWrapper messageWrapper = MessageWrapper
+                .builder()
+                .str(tmp)
+                .messageType(MessageType.MESSAGE_FREE_FOR_PERSONTYPE)
                 .fromPerson(this)
                 .fromPort(this.port)
                 .build();
@@ -168,14 +189,13 @@ public class Person {
         return response;
     }
 
-    @JsonIgnore
-    public void send_I_Am_Free() throws JsonProcessingException {
-        Message message = new Message();
-        message.setMessage("I AM FREE");
-        message.setPerson(this);
-        message.setPort(this.port);
 
-        sendMessage(message, null, null, null);
+    @JsonIgnore
+    public void send_I_Am_FreeFor(List<PersonType> list) throws JsonProcessingException {
+        MessageFreeForPersonType message = new MessageFreeForPersonType(list);
+
+
+        sendMessageFreeForPersonType(message);
 
     }
 

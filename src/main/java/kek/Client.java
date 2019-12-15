@@ -1,12 +1,15 @@
 package kek;
 
 import kek.person.Person;
+import kek.person.PersonType;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Getter
@@ -22,6 +25,7 @@ public class Client {
     private boolean clientNotified = false;   // Если true, то клиент активен, и знает свой id ( port )
 
     private boolean free = false;
+    private List<PersonType> freeFor = new ArrayList<>();
 
     //
     private Person person;

@@ -1,13 +1,11 @@
 package kek.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kek.person.Person;
 import kek.person.PersonType;
 import lombok.*;
-
 
 @Builder
 @Data
@@ -56,6 +54,17 @@ public class MessageWrapper {
         this.messageType = MessageType.MESSAGE;
     }
 
+    // Обычное сообщение
+    @JsonIgnore
+    public MessageFreeForPersonType getMessageFreeForPersonType() throws JsonProcessingException {
+        return MessageFreeForPersonType.deserialize(str);
+    }
+
+    @JsonIgnore
+    public void setMessageFreeForPersonType(MessageFreeForPersonType messageFreeForPersonType) throws JsonProcessingException {
+        this.str = messageFreeForPersonType.serialize();
+        this.messageType = MessageType.MESSAGE_FREE_FOR_PERSONTYPE;
+    }
 
 
 //    @JsonIgnore
