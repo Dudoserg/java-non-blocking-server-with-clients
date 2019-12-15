@@ -3,10 +3,7 @@ package kek;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
-import kek.message.MessConfirm;
-import kek.message.Message;
-import kek.message.MessageType;
-import kek.message.MessageWrapper;
+import kek.message.*;
 import kek.person.Person;
 import kek.person.PersonType;
 
@@ -457,35 +454,41 @@ public class EchoServer implements Runnable {
             case MESSAGE: {
                 // Вытаскиваем сообщение о подтверждении
                 Message message = messageWrapper.getMessage();
+                Person p = clients_map.get(socketChannel).getPerson();
+                switch (p.getPersonType()) {
+                    case BUYER: {
+                        // Добавляем запрос от покупателя в очередь
+                        this.buyerQueueList.add(new Pair<>(client, messageWrapper));
+                        break;
+                    }
+                    case DISPATCHER: {
+                        // Добавляем запрос от диспетчера в очередь
+                        this.dispatcherQueueList.add(new Pair<>(client, messageWrapper));
+                        break;
+                    }
+                    case COOK: {
+                        this.cookQueueList.add(new Pair<>(client, messageWrapper));
+                        break;
+                    }
+                    case COURIER: {
+                        this.courierQueueList.add(new Pair<>(client, messageWrapper));
+                        break;
+                    }
+
+                }
+                break;
+            }
+            case MESSAGE_FREE_FOR_PERSONTYPE:{
+                // Вытаскиваем сообщение о подтверждении
+                MessageFreeForPersonType message = messageWrapper.getMessageFreeForPersonType();
 
                 // Клиент прислал сообщение о том, что он теперь не занят
-                if (message.getMessage().equals("I AM FREE")) {
-                    System.out.println("socketChannel #" + client.getPort() + " I_AM_FREE");
-                    // Помечаем его свободным, чтобы можно было послать ему сообщение
-                    client.setFree(true);
-                } else {
-                    Person p = clients_map.get(socketChannel).getPerson();
-                    switch (p.getPersonType()) {
-                        case BUYER: {
-                            // Добавляем запрос от покупателя в очередь
-                            this.buyerQueueList.add(new Pair<>(client, messageWrapper));
-                            break;
-                        }
-                        case DISPATCHER: {
-                            // Добавляем запрос от диспетчера в очередь
-                            this.dispatcherQueueList.add(new Pair<>(client, messageWrapper));
-                            break;
-                        }
-                        case COOK:{
-                            this.cookQueueList.add(new Pair<>(client, messageWrapper));
-                            break;
-                        }
-                        case COURIER:{
-                            this.courierQueueList.add(new Pair<>(client, messageWrapper));
-                            break;
-                        }
-                    }
-                }
+
+                System.out.println("socketChannel #" + client.getPort() + " I_AM_FREE");
+                // Помечаем его свободным, чтобы можно было послать ему сообщение
+                client.setFreeFor(message.getList());
+                client.setFree(true);
+
                 break;
             }
         }
