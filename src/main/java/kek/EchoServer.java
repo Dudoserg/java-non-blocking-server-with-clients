@@ -478,21 +478,18 @@ public class EchoServer implements Runnable {
                         this.courierQueueList.add(new Pair<>(client, messageWrapper));
                         break;
                     }
-
                 }
                 break;
             }
-            case MESSAGE_FREE_FOR_PERSONTYPE:{
+            case MESSAGE_FREE_FOR_PERSONTYPE: {
                 // Вытаскиваем сообщение о подтверждении
                 MessageFreeForPersonType message = messageWrapper.getMessageFreeForPersonType();
-
                 // Клиент прислал сообщение о том, что он теперь не занят
-
                 System.out.println("socketChannel #" + client.getPort() + message.toString());
-                // Помечаем его свободным, чтобы можно было послать ему сообщение
+                // Вот эти ребята могут посылать сообщение клиенту
                 client.setFreeFor(message.getList());
+                // Помечаем его свободным, чтобы можно было послать ему сообщение
                 client.setFree(true);
-
                 break;
             }
         }

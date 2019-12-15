@@ -18,8 +18,6 @@ public class MessageFreeForPersonType {
     private List<PersonType> list = new ArrayList<>();
 
 
-
-
     @Override
     public String toString() {
         return "MessageFreeForPersonType{" +

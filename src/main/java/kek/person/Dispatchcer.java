@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import kek.message.Message;
 import kek.message.MessageWrapper;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
@@ -50,11 +51,9 @@ public class Dispatchcer implements Runnable {
         try {
             while (true) {
 
-                System.out.println("\n\nЖду какого-либо сообщения\t");
-
                 // Говорим серверу, что готовы принимать сообщения от
                 person.send_I_Am_FreeFor(
-                        new ArrayList<PersonType>(){
+                        new ArrayList<PersonType>() {
                             {
                                 add(PersonType.BUYER);
                                 add(PersonType.COOK);
@@ -69,27 +68,44 @@ public class Dispatchcer implements Runnable {
                         messageWrapperFrom.getFromPerson().getPersonType());
                 switch (messageWrapperFrom.getFromPerson().getPersonType()) {
                     case BUYER: {
-                        Message message = messageWrapperFrom.getMessage();
-                        System.out.println("Он хочет : " + message.getMessage());
+                        Message messageFromBuyer = messageWrapperFrom.getMessage();
+                        System.out.println("Он хочет : " + messageFromBuyer.getMessage());
 
-                        // Имитируем бурную деятельность
-                        System.out.println("Поваров ща нет, так что я сам " +
-                                message.getMessage() + " сготовлю)0");
-                        System.out.println("Начинаю готовить");
-                        this.person.working(10);
-                        System.out.println("блюдо готово");
+                        // Передаем сообщение повару
+                        System.out.println("Передаю сообщение повару");
+                        this.person.working(5);
+
 
                         // Шлем ответ имеено данному покупателю
                         Message messageTo = new Message();
-                        messageTo.setMessage(message.getMessage().toUpperCase() + " ГОТОВА");
 
-                        // Отправляем сообщение нашему покупателю
+                        messageTo.setMessage(messageFromBuyer.getMessage());
+
+                        // Отправляем сообщение ЛЮБОМУ ПОВАРУ
                         this.person.sendMessage(
                                 messageTo,
-                                messageWrapperFrom.getFromPort(),
-                                messageWrapperFrom.getFromPerson(),
-                                messageWrapperFrom.getFromPersonType()
+                                null,
+                                null, messageWrapperFrom.getFromPersonType()
                         );
+                        System.out.println("Сообщение передано");
+
+//                        // Шлем ответ имеено данному покупателю
+//                        Message messageTo = new Message();
+//
+//                        messageTo.setMessage("========================" +
+//                                "========================\n" +
+//                                messageFromBuyer.getMessage().toUpperCase() +
+//                                " ZAKAZ GOTOV ;-)\n" +
+//                                "========================" +
+//                                "========================");
+//
+//                        // Отправляем сообщение КОНКРЕТНОМУ покупателю
+//                        this.person.sendMessage(
+//                                messageTo,
+//                                messageWrapperFrom.getFromPort(),
+//                                messageWrapperFrom.getFromPerson(),
+//                                messageWrapperFrom.getFromPersonType()
+//                        );
                         break;
                     }
                     case COURIER: {
@@ -102,7 +118,7 @@ public class Dispatchcer implements Runnable {
 
                 // Говорим серверу, что готовы принимать сообщения от
                 person.send_I_Am_FreeFor(
-                        new ArrayList<PersonType>(){
+                        new ArrayList<PersonType>() {
                             {
                                 add(PersonType.BUYER);
                                 add(PersonType.COOK);
@@ -132,5 +148,18 @@ public class Dispatchcer implements Runnable {
 
     }
 
-
+    private String readFromFile(String fileName) {
+        String result = "";
+        try (FileReader reader = new FileReader(fileName)) {
+            // читаем посимвольно
+            int c;
+            while ((c = reader.read()) != -1) {
+                //System.out.print((char)c);
+                result += (char) c;
+            }
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return result;
+    }
 }
