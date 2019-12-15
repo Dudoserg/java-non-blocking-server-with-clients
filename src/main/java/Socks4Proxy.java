@@ -22,7 +22,7 @@ import java.util.Scanner;
  * @date 19.09.2009
  */
 public class Socks4Proxy implements Runnable {
-    int bufferSize = 8192;
+    int bufferSize = 16384;
     /**
      * Порт
      */
@@ -130,7 +130,7 @@ public class Socks4Proxy implements Runnable {
                                 connect(key);
                             } else if (key.isReadable()) {
                                 // Читаем данные
-                                ByteBuffer buffer = ByteBuffer.allocate(4096);
+                                ByteBuffer buffer = ByteBuffer.allocate(16384);
                                 answerWithEcho(buffer, key);
                                 read(key);
                             } else if (key.isWritable()) {
@@ -170,7 +170,7 @@ public class Socks4Proxy implements Runnable {
         // Регистрируем в селекторе
         newChannel.register(key.selector(), SelectionKey.OP_READ);
 
-        ByteBuffer buffer = ByteBuffer.allocate(256);
+        ByteBuffer buffer = ByteBuffer.allocate(16384);
         buffer.put("OK".getBytes());
         buffer.flip();
         newChannel.write(buffer);

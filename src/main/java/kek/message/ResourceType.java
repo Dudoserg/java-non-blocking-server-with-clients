@@ -1,6 +1,7 @@
 package kek.message;
 
 public enum ResourceType {
-    NEED,
-    FREE
+    NEED,   // Запрос ресурсов
+    FREE,   // Освобождение ресурсов философОМ
+    SEND   // Отправка ресурсов философУ
 }

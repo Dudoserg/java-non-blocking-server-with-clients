@@ -163,7 +163,7 @@ public class Person {
 
     @JsonIgnore
     public String send(String msg) {
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
+        ByteBuffer buffer = ByteBuffer.allocate(16384);
         buffer.clear();
         buffer.put(msg.getBytes());
         // НА начало буфера переходим
@@ -180,7 +180,7 @@ public class Person {
 
     @JsonIgnore
     public String readMessage() {
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
+        ByteBuffer buffer = ByteBuffer.allocate(16384);
         try {
             buffer.clear();
             this.socketChannel.read(buffer);

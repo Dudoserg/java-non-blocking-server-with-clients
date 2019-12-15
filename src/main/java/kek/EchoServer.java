@@ -17,8 +17,16 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
 
 public class EchoServer implements Runnable {
+
+    public static void main(String[] args) {
+        EchoServer echoServer = new EchoServer();
+        echoServer.run();
+    }
+
     static class Attachment {
         /**
          * Буфер для чтения, в момент проксирования становится буфером для
@@ -43,6 +51,13 @@ public class EchoServer implements Runnable {
 
     }
 
+    Selector selector = null;
+    ServerSocketChannel serverSocket;
+    ByteBuffer buffer;
+
+    Thread_SendMessage threadSendMessage;
+    Semaphore semaphore_clients_list = new Semaphore(1);
+
     private int numMessage = 0;
 
     private static final String POISON_PILL = "POISON_PILL";
@@ -57,40 +72,38 @@ public class EchoServer implements Runnable {
     List<Pair<Client, MessageWrapper>> cookQueueList = new LinkedList<>();
     List<Pair<Client, MessageWrapper>> courierQueueList = new LinkedList<>();
 
+
     HashMap<PersonType, List<Pair<Client, MessageWrapper>>> requestQueueHashMap
             = new HashMap<PersonType, List<Pair<Client, MessageWrapper>>>() {
         {
             put(PersonType.BUYER, buyerQueueList);
             put(PersonType.DISPATCHER, dispatcherQueueList);
+//            put(PersonType.COOK, cookQueueList);
+//            put(PersonType.COURIER, courierQueueList);
         }
     };
 
-
-    public static void main(String[] args) {
-        EchoServer echoServer = new EchoServer();
-        echoServer.run();
-    }
-
-    Selector selector = null;
-    ServerSocketChannel serverSocket;
-    ByteBuffer buffer;
+    List<Boolean> freeResources = new ArrayList<>();
+    List<Pair<Client, MessageWrapper>> needResource = new ArrayList<>();
 
     public EchoServer() {
-
         try {
             selector = Selector.open();
             serverSocket = ServerSocketChannel.open();
             serverSocket.bind(new InetSocketAddress("localhost", 3443));
             serverSocket.configureBlocking(false);
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            buffer = ByteBuffer.allocate(4096);
+            buffer = ByteBuffer.allocate(16384);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.init();
     }
 
-    Thread_SendMessage threadSendMessage;
-    Semaphore semaphore_clients_list = new Semaphore(1);
+    public void init() {
+        // Инициализируем 100 ресурсов, ну шоб с запасом
+        IntStream.range(0, 100).forEach(value -> freeResources.add(true));
+    }
 
     @Override
     public void run() {
@@ -108,6 +121,99 @@ public class EchoServer implements Runnable {
                 }
                 //System.gc();
                 System.out.println(".");
+            }
+        }).start();
+
+        // Обеспечение философов ресурсами
+        new Thread(() -> {
+            try {
+                while (true) {
+
+                    // Перебираем все запросы
+                    Iterator<Pair<Client, MessageWrapper>> it = needResource.iterator();
+                    while (it.hasNext()) {
+                        Pair<Client, MessageWrapper> pair = it.next();
+                        Client client = pair.getKey();
+                        SocketChannel socketChannel = client.getSocketChannel();
+                        MessageWrapper messageWrapper = pair.getValue();
+                        MessResource messResource = messageWrapper.getMessResource();
+
+                        // Если пользователь Запрашивает ресурсы
+                        if (messResource.getResourceType().equals(ResourceType.NEED)) {
+                            boolean allResourcesIsFree = true;
+                            for (int i = 0; i < messResource.getResource().size(); i++) {
+                                int numNeedResource = messResource.getResource().get(i);
+                                if (freeResources.get(numNeedResource) == false) {
+                                    allResourcesIsFree = false;
+                                    // Дальше уже можно не проверять, один из необходимых ресурсов занят
+                                    break;
+                                }
+                            }
+
+                            if (allResourcesIsFree) {
+                                // Все необходимые ресурсы свободны
+                                // Блокируем ресурсы
+                                for (int q = 0; q < messResource.getResource().size(); q++) {
+                                    int numNeedResource = messResource.getResource().get(q);
+                                    this.freeResources.set(numNeedResource, false);
+                                }
+                                // отправляем их юзеру
+                                ByteBuffer byteBuffer = ByteBuffer.allocate(16384);
+
+                                MessResource messResourceSend = new MessResource(
+                                        new ArrayList<Integer>() {{
+                                            this.addAll(messResource.getResource());
+                                        }},
+                                        ResourceType.SEND
+                                );
+                                MessageWrapper messageWrapperSend = MessageWrapper.builder()
+                                        .str(messResourceSend.serialize())
+                                        .messageType(MessageType.MESSAGE_RESOURCE)
+                                        .build();
+                                messageWrapperSend.init();
+                                // пихаем туда сообщение
+                                String str = null;
+                                try {
+                                    str = messageWrapperSend.serialize();
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                }
+                                byteBuffer.clear();
+                                byteBuffer.put(str.getBytes());
+                                // НА начало буфера переходим
+                                byteBuffer.flip();
+
+                                try {
+                                    // Пишем в него
+                                    socketChannel.write(byteBuffer);
+                                    System.out.println("to " + client.getPerson().getPersonType() + " #" + client.getPort() + " send = " + str);
+                                    // Теперь данный клиент занят, и мы не можем ему послать новое сообщение, т.к. он его не успеет обработать
+                                    client.setFree(false);
+                                    System.out.println(client.getPerson().getPersonType() + " #" + client.getPort() + " free = false ");
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                byteBuffer.flip();
+                                // Удаляем данный запрос
+                                it.remove();
+                            } else {
+                                continue;
+                            }
+                        }
+                    }
+
+                    // Если пользователь отдает ресурс
+                    // Делаем это в отдельном цикле, чтобы не нарушить очередность
+                    // т.к. вернуть может 5й из списка, а получит ресурсы 10й, хотя их же ждет 1й в очереди
+
+                    try {
+                        Thread.sleep(150);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
             }
         }).start();
 
@@ -176,7 +282,7 @@ public class EchoServer implements Runnable {
                                 if (flag) {
                                     // Если to свободен, шлем ему сообщение от from
                                     // Создаем буфер
-                                    ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
+                                    ByteBuffer byteBuffer = ByteBuffer.allocate(16384);
 
                                     // пихаем туда сообщение
                                     String str = null;
@@ -235,7 +341,7 @@ public class EchoServer implements Runnable {
 //                if (this.clients_list.size() > 0) {
 //
 //                    // Создаем буфер
-//                    ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
+//                    ByteBuffer byteBuffer = ByteBuffer.allocate(16384);
 //                    String str = null;
 //                    try {
 //                        str = this.serialize();
@@ -399,7 +505,7 @@ public class EchoServer implements Runnable {
         clients_map.put(socketChannel, myClient);
 
         // Отправляем ему OK
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
+        ByteBuffer buffer = ByteBuffer.allocate(16384);
 
         MessConfirm messConfirm =
                 MessConfirm.builder("OK", myClient.getPort())
@@ -493,6 +599,8 @@ public class EchoServer implements Runnable {
                 MessResource message = messageWrapper.getMessResource();
                 // Клиент прислал сообщение о том, что он теперь не занят
                 System.out.println("socketChannel #" + client.getPort() + message.toString());
+
+                this.needResource.add(new Pair<>(client, messageWrapper));
 
                 break;
             }
