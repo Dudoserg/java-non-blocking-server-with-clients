@@ -106,7 +106,8 @@ public class Person {
     }
 
     @JsonIgnore
-    public String sendMessage(Message obj) throws JsonProcessingException {
+    public String sendMessage(Message obj, Integer toPort, Person toPerson,
+                              PersonType toPersonType) throws JsonProcessingException {
 
         String tmp = obj.serialize();
 
@@ -117,6 +118,10 @@ public class Person {
                 .messageType(MessageType.MESSAGE)
                 .fromPerson(this)
                 .fromPort(this.port)
+                .fromPersonType(this.personType)
+                .toPort(toPort)
+                .toPerson(toPerson)
+                .toPersonType(toPersonType)
                 .build();
 
         // Сериализуем и отправляем сообщение на сервер
@@ -128,7 +133,7 @@ public class Person {
 
     @JsonIgnore
     private String send(String msg) {
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
         buffer.clear();
         buffer.put(msg.getBytes());
         // НА начало буфера переходим
@@ -145,7 +150,7 @@ public class Person {
 
     @JsonIgnore
     public String readMessage() {
-        ByteBuffer buffer = ByteBuffer.allocate(4096);
+        ByteBuffer buffer = ByteBuffer.allocate(1024);
         try {
             buffer.clear();
             this.socketChannel.read(buffer);
@@ -170,7 +175,7 @@ public class Person {
         message.setPerson(this);
         message.setPort(this.port);
 
-        sendMessage(message);
+        sendMessage(message, null, null, null);
 
     }
 
@@ -201,4 +206,17 @@ public class Person {
 //        socketChannel.close();
 //        buffer = null;
 //    }
+
+    public void working(int timeSleep) throws InterruptedException {
+        System.out.println();
+        for (int i = timeSleep; i > 0; i--) {
+            System.out.print("\r");
+            System.out.print("\r                                                    ");
+            System.out.print("\r");
+            System.out.print("Осталось : " + i + " сек.");
+            Thread.sleep(1000);
+        }
+        System.out.println("Закончил");
+    }
+
 }

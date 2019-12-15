@@ -8,6 +8,7 @@ import kek.person.Person;
 import kek.person.PersonType;
 import lombok.*;
 
+
 @Builder
 @Data
 @Getter
@@ -23,6 +24,7 @@ public class MessageWrapper {
     // От кого сообщение
     private Integer fromPort;
     private Person fromPerson;
+    private PersonType fromPersonType;
 
     // Кому адресовано
     private Integer toPort;
