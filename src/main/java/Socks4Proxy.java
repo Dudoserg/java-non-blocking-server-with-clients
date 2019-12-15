@@ -130,7 +130,7 @@ public class Socks4Proxy implements Runnable {
                                 connect(key);
                             } else if (key.isReadable()) {
                                 // Читаем данные
-                                ByteBuffer buffer = ByteBuffer.allocate(1024);
+                                ByteBuffer buffer = ByteBuffer.allocate(4096);
                                 answerWithEcho(buffer, key);
                                 read(key);
                             } else if (key.isWritable()) {
@@ -189,7 +189,7 @@ public class Socks4Proxy implements Runnable {
         String str = new String(buffer.array());
         if (new String(buffer.array()).trim().equals("DUDOS")) {
             client.close();
-            System.out.println("Not accepting client messages anymore");
+            System.out.println("Not accepting socketChannel messages anymore");
         }
 
         buffer.flip();

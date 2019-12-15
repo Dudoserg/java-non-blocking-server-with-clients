@@ -1,9 +1,16 @@
 package kek;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import javafx.util.Pair;
 import kek.message.MessConfirm;
+import kek.message.Message;
 import kek.message.MessageType;
 import kek.message.MessageWrapper;
+import kek.person.Buyer;
+import kek.person.Person;
+import kek.person.PersonType;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -37,14 +44,17 @@ public class EchoServer implements Runnable {
 
     }
 
+    private int numMessage = 0;
+
     private static final String POISON_PILL = "POISON_PILL";
 
     List<Client> clients_list = new ArrayList<>();
 
     HashMap<SocketChannel, Client> clients_map = new HashMap<SocketChannel, Client>();
 
-
-
+    // Очередь запросов от покупателей
+    List<Pair<Client, MessageWrapper>> buyerQueueList = new ArrayList<>();
+    List<Pair<Client, MessageWrapper>> dispatcherQueueList = new ArrayList<>();
 
     public static void main(String[] args) {
         EchoServer echoServer = new EchoServer();
@@ -63,7 +73,7 @@ public class EchoServer implements Runnable {
             serverSocket.bind(new InetSocketAddress("localhost", 3443));
             serverSocket.configureBlocking(false);
             serverSocket.register(selector, SelectionKey.OP_ACCEPT);
-            buffer = ByteBuffer.allocate(1024);
+            buffer = ByteBuffer.allocate(4096);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,67 +100,151 @@ public class EchoServer implements Runnable {
             }
         }).start();
 
-        // В данном потоке рассылка всем клиентам времени каждые 2 секунды
+        // Рассылка сообщений из очереди, если они имеются
+        // И если есть кому отправлять)0
         new Thread(() -> {
             while (true) {
-                if (this.clients_list.size() > 0) {
 
-                    // Создаем буфер
-                    ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-                    String str = LocalDateTime.now().toLocalTime().toString();
-                    // пихаем туда строку
-                    byteBuffer.clear();
-                    byteBuffer.put(str.getBytes());
-                    // НА начало буфера переходим
-                    byteBuffer.flip();
-                    // Итератор по клиентам
-                    Iterator<Client> it = clients_list.iterator();
-                    // ПРоходимся по всем клиентам
-                    while (it.hasNext()) {
-                        // очередной клиент
-                        Client client = it.next();
-                        SocketChannel socketChannel = client.getSocketChannel();
+                // Смотрим сообщения от ПОКУПАТЕЛЕЙ
+                Iterator<Pair<Client, MessageWrapper>> it = buyerQueueList.iterator();
+                while (it.hasNext()) {
+                    Pair<Client, MessageWrapper> pair = it.next();
 
-                        // Если клиент готов к передаче
-                        if (client.isClientNotified()) {
-                            // Если клиент открыт
-                            if (socketChannel.isOpen()) {
-                                // Отправляем сообщение клиенту
+                    Client queue_Client = pair.getKey();
+                    MessageWrapper queue_messageWrapper = pair.getValue();
+
+                    Message message = null;
+                    try {
+                        message = queue_messageWrapper.getMessage();
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
+                    // Ищем свободного диспетчера
+                    for (Client clientDispatcher : clients_list) {
+
+                        SocketChannel dispatcher_Channel = clientDispatcher.getSocketChannel();
+
+
+                        //if dispatcherChannel.isOpen()
+                        if (clientDispatcher.isClientNotified())
+                            if (clientDispatcher.getPerson().getPersonType().equals(PersonType.DISPATCHER)
+                                    && clientDispatcher.isFree()) {
+                                // Если диспетчер свободен, шлем ему сообщение от покупателя
+                                // Создаем буфер
+                                ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
+
+                                // пихаем туда сообщение
+                                String str = null;
+                                try {
+                                    str = queue_messageWrapper.serialize();
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                }
+                                byteBuffer.clear();
+                                byteBuffer.put(str.getBytes());
+                                // НА начало буфера переходим
+                                byteBuffer.flip();
+
                                 try {
                                     // Пишем в него
-                                    socketChannel.write(byteBuffer);
+                                    dispatcher_Channel.write(byteBuffer);
+                                    System.out.println("to dispatcherChannel #" + clientDispatcher.getPort() + " send = " + str);
+                                    // Теперь данный клиент занят, и мы не можем ему послать новое сообщение, т.к. он его не успеет обработать
+                                    clientDispatcher.setFree(false);
+                                    System.out.println("dispatcherChannel #" + clientDispatcher.getPort() + " free = false ");
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                                 byteBuffer.flip();
-                            } else {
-                                // Закрываем сокет клиента, ХЗ надо ли
-                                try {
-                                    client.close();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                // Удаляем клиента из clients_list, т.к. он закрыт
+
+                                //!!!!!!!!!!!!!1
+                                // Удаляем сообщение, его уже передали диспетчеру
                                 it.remove();
-                                System.out.println("Клиент #" + client.getPort() + " закрыт, Удаляем из списка");
+                                break;
                             }
-//                        try {
-//
-//                        } catch (ClosedChannelException e) {
-//                            e.printStackTrace();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-                        }
                     }
                 }
+                // Спим
                 try {
-                    Thread.sleep(1999);
+                    Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+
+        // В данном потоке рассылка всем клиентам времени каждые 2 секунды
+
+//        new Thread(() -> {
+//            while (true) {
+//                if (this.clients_list.size() > 0) {
+//
+//                    // Создаем буфер
+//                    ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
+//                    String str = LocalDateTime.now().toLocalTime().toString();
+//                    // пихаем туда строку
+//                    byteBuffer.clear();
+//                    byteBuffer.put(str.getBytes());
+//                    // НА начало буфера переходим
+//                    byteBuffer.flip();
+//                    // Итератор по клиентам
+//                    Iterator<Client> it = clients_list.iterator();
+//                    // ПРоходимся по всем клиентам
+//                    while (it.hasNext()) {
+//                        // очередной клиент
+//                        Client client = it.next();
+//                        SocketChannel socketChannel = client.getSocketChannel();
+//
+//                        // Если клиент прошел подтверждение регистрации
+//                        // Если клиент не занят
+//                        if (client.isClientNotified() && client.isFree()) {
+//                            // Если клиент открыт
+//                            if (socketChannel.isOpen()) {
+//                                // Отправляем сообщение клиенту
+//                                try {
+//                                    // Пишем в него
+//                                    socketChannel.write(byteBuffer);
+//                                    System.out.println("to socketChannel #" + client.getPort() + " send = " + str);
+//                                    // Теперь данный клиент занят, и мы не можем ему послать новое сообщение, т.к. он его не успеет обработать
+//                                    client.setFree(false);
+//                                    System.out.println("socketChannel #" + client.getPort() + " free = false ");
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                byteBuffer.flip();
+//                            } else {
+//                                // Закрываем сокет клиента, ХЗ надо ли
+//                                try {
+//                                    client.close();
+//                                } catch (IOException e) {
+//                                    e.printStackTrace();
+//                                }
+//                                // Удаляем клиента из clients_list, т.к. он закрыт
+//                                it.remove();
+//                                System.out.println("Клиент #" + client.getPort() + " закрыт, Удаляем из списка");
+//                            }
+////                        try {
+////
+////                        } catch (ClosedChannelException e) {
+////                            e.printStackTrace();
+////                        } catch (IOException e) {
+////                            e.printStackTrace();
+////                        }
+//                        }
+//                        byteBuffer.clear();
+//                    }
+//                }
+//                try {
+//                    Thread.sleep(1999);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
+
+
+        // Работа по принятию сообщений
 
         try {
             // Ждем очередного события
@@ -175,14 +269,23 @@ public class EchoServer implements Runnable {
                         // То сообщение будет пустым
                         ByteBuffer buff = ByteBuffer.allocate(32);
                         SocketChannel socketChannel = (SocketChannel) key.channel();
-                        SocketChannel client = (SocketChannel) key.channel();
                         try {
-                            client.read(buffer);
+                            socketChannel.read(buffer);
                         } catch (IOException e) {
+                            Client client = clients_map.get(socketChannel);
                             // Закрываем клиента, и удаляем его из списка
-                            System.out.println("Клиент #" + clients_map.get(socketChannel).getPort() + " отвалился, закрываем");
-                            // удаляем из списка
-                            clients_list.remove(socketChannel);
+                            System.out.println("Клиент #" + client.getPort() + " отвалился, закрываем");
+                            client.close();
+                            System.out.println("Клиент #" + client.getPort() + " закрыт, Удаляем из списка");
+
+                            // удаляем из списков
+                            clients_map.remove(socketChannel);
+                            clients_list.remove(client);
+
+                            // Удалим запрос этого пользователя, если он был
+                            ////////////////!!!!!!!!!!!!!!!!!!!!!
+                            ////////////////!!!!!!!!!!!!!!!!!!!!!
+
                             // закрываем
                             key.cancel();
                             socketChannel.close();
@@ -230,7 +333,7 @@ public class EchoServer implements Runnable {
         clients_map.put(socketChannel, myClient);
 
         // Отправляем ему OK
-        ByteBuffer buffer = ByteBuffer.allocate(1024);
+        ByteBuffer buffer = ByteBuffer.allocate(4096);
 
         MessConfirm messConfirm =
                 MessConfirm.builder("OK", myClient.getPort())
@@ -258,7 +361,7 @@ public class EchoServer implements Runnable {
         socketChannel.read(buffer);
         String message_str = new String(buffer.array());
 
-        System.out.println("i got " + message_str + "\n\tfrom client #" + client.getPort());
+        System.out.println("i got " + message_str + "\n\tfrom socketChannel #" + client.getPort());
 
         MessageWrapper messageWrapper =
                 MessageWrapper.deserialize(message_str);
@@ -277,16 +380,40 @@ public class EchoServer implements Runnable {
                         client.setClientNotified(true);
                         // Запоминаем Тип клиента
                         client.setPerson(messConfirm.getPerson());
-                        System.out.println("client #" + client.getPort() + " isClientNotified = true");
+                        // Клиент готов к приему данных
+                        client.setFree(true);
+                        System.out.println("socketChannel #" + client.getPort() + " isClientNotified = true");
                     }
                 }
                 break;
             }
             case MESSAGE: {
+                // Вытаскиваем сообщение о подтверждении
+                Message message = messageWrapper.getMessage();
+
+                // Клиент теперь освобожден
+                if (message.getMessage().equals("I AM FREE")) {
+                    System.out.println("socketChannel #" + client.getPort() + " I_AM_FREE");
+                    client.setFree(true);
+                } else {
+                    Person p = clients_map.get(socketChannel).getPerson();
+                    switch (p.getPersonType()) {
+                        case BUYER: {
+                            // Добавляем запрос от покупателя в очередь
+                            this.buyerQueueList.add(new Pair<>(client, messageWrapper));
+                            break;
+                        }
+                        case DISPATCHER: {
+                            // Добавляем запрос от диспетчера в очередь
+                            this.dispatcherQueueList.add(new Pair<>(client, messageWrapper));
+                            break;
+                        }
+                    }
+                }
                 break;
             }
         }
-
+        buffer.clear();
         return true;
     }
 
@@ -300,7 +427,7 @@ public class EchoServer implements Runnable {
 
         if (new String(buffer.array()).trim().equals(POISON_PILL)) {
             client.close();
-            System.out.println("Not accepting client messages anymore");
+            System.out.println("Not accepting socketChannel messages anymore");
         }
 
         buffer.flip();

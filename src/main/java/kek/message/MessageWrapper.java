@@ -30,6 +30,7 @@ public class MessageWrapper {
     private PersonType toPersonType;
 
     //    @JsonIgnoreProperties
+    // Сообщение с подтверждением регистрации
     @JsonIgnore
     public MessConfirm getMessConfirm() throws JsonProcessingException {
         return MessConfirm.deserialize(str);
@@ -41,10 +42,29 @@ public class MessageWrapper {
         this.messageType = MessageType.MESSAGE_CONFIRM;
     }
 
+    // Обычное сообщение
     @JsonIgnore
-    public void setMessage(MessConfirm message) throws JsonProcessingException {
-        this.setMessConfirm(message);
+    public Message getMessage() throws JsonProcessingException {
+        return Message.deserialize(str);
     }
+
+    @JsonIgnore
+    public void setMessage(Message message) throws JsonProcessingException {
+        this.str = message.serialize();
+        this.messageType = MessageType.MESSAGE;
+    }
+
+
+
+//    @JsonIgnore
+//    public void setMess(MessConfirm message) throws JsonProcessingException {
+//        this.setMessConfirm(message);
+//    }
+//    @JsonIgnore
+//    public void setMess(Message message) throws JsonProcessingException {
+//        this.setMessage();
+//    }
+
 
     // Jackson
     public static MessageWrapper deserialize(String serializedObject) throws JsonProcessingException {

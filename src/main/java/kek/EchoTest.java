@@ -5,18 +5,18 @@ import static org.junit.Assert.assertEquals;
 public class EchoTest {
 //
 //    Process server;
-//    EchoClient client;
+//    EchoClient socketChannel;
 //
 //    @Before
 //    public void setup() throws IOException, InterruptedException {
 //        //server = EchoServer.start();
-//        client = EchoClient.start();
+//        socketChannel = EchoClient.start();
 //    }
 //
 //    @Thread_SendMessage
 //    public void givenServerClient_whenServerEchosMessage_thenCorrect() {
-//        String resp1 = client.sendMessage("hello");
-//        String resp2 = client.sendMessage("world");
+//        String resp1 = socketChannel.sendMessConfirm("hello");
+//        String resp2 = socketChannel.sendMessConfirm("world");
 //        assertEquals("HELLO", resp1);
 //        assertEquals("WORLD", resp2);
 //    }

@@ -5,41 +5,40 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kek.person.Person;
 import lombok.*;
 
-
 @Builder(builderMethodName = "hiddenBuilder")
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class MessConfirm {
+public class Message {
 
     private String message;
 
     private Integer port;
     private Person person;
 
-    public MessConfirm(String message, Integer port) {
+    public Message(String message, Integer port) {
         this.message = message;
         this.port = port;
     }
 
 
-    public static MessConfirmBuilder builder(String message, Integer port){
+    public static MessageBuilder builder(String message, Integer port){
         return hiddenBuilder()
                 .message(message)
                 .port(port);
     }
 
     // Jackson
-    public static MessConfirm deserialize(String serializedObject) throws JsonProcessingException {
+    public static Message deserialize(String serializedObject) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        MessConfirm messageFromClient = objectMapper.readValue(serializedObject, MessConfirm.class);
+        Message messageFromClient = objectMapper.readValue(serializedObject, Message.class);
         return messageFromClient;
     }
 
     //Jackson
-    public static String serialize(MessConfirm message) throws JsonProcessingException {
+    public static String serialize(Message message) throws JsonProcessingException {
         return new ObjectMapper().writeValueAsString(message);
     }
 
@@ -50,3 +49,4 @@ public class MessConfirm {
 
 
 }
+

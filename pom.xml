@@ -43,7 +43,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>kek.EchoClient</mainClass>
+                                    <mainClass>kek.person.EchoClient</mainClass>
                                 </manifest>
                             </archive>
                             <finalName>EchoClient</finalName>
