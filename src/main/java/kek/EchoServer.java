@@ -40,7 +40,11 @@ public class EchoServer implements Runnable {
     private static final String POISON_PILL = "POISON_PILL";
 
     List<Client> clients_list = new ArrayList<>();
+
     HashMap<SocketChannel, Client> clients_map = new HashMap<SocketChannel, Client>();
+
+
+
 
     public static void main(String[] args) {
         EchoServer echoServer = new EchoServer();
@@ -64,32 +68,25 @@ public class EchoServer implements Runnable {
             e.printStackTrace();
         }
     }
-    Thread test;
+
+    Thread_SendMessage threadSendMessage;
+
     @Override
     public void run() {
         System.out.println("start server");
-         test = new Thread(() ->{
-            synchronized(this) {
-                while (true){
-                    System.out.println(123);
-                    try {
-                        this.wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
-        test.start();
+        threadSendMessage = new Thread_SendMessage();
+        threadSendMessage.start();
+
         // GC мусор
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(20000);
+                    Thread.sleep(2000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.gc();
+                //System.gc();
+                System.out.println(".");
             }
         }).start();
 
@@ -115,9 +112,9 @@ public class EchoServer implements Runnable {
                         SocketChannel socketChannel = client.getSocketChannel();
 
                         // Если клиент готов к передаче
-                        if( client.isClientNotified() ){
+                        if (client.isClientNotified()) {
                             // Если клиент открыт
-                            if (socketChannel.isOpen() ) {
+                            if (socketChannel.isOpen()) {
                                 // Отправляем сообщение клиенту
                                 try {
                                     // Пишем в него
@@ -158,11 +155,12 @@ public class EchoServer implements Runnable {
         try {
             // Ждем очередного события
             while (selector.select() > -1) {
-
                 // Ключи событий
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
                 // Итератор по этим ключам( в них вроде находятся клиенты наши )
                 Iterator<SelectionKey> iter = selectedKeys.iterator();
+
+                threadSendMessage.not();
 
                 while (iter.hasNext()) {
 

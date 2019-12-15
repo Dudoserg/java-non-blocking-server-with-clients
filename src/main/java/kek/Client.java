@@ -21,6 +21,8 @@ public class Client {
     // Клиент отвечает OK-port, в таком случае клиент уведомлен
     private boolean clientNotified = false;   // Если true, то клиент активен, и знает свой id ( port )
 
+    private boolean free = false;
+
     //
     private Person person;
 

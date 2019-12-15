@@ -13,7 +13,7 @@ public class EchoTest {
 //        client = EchoClient.start();
 //    }
 //
-//    @Test
+//    @Thread_SendMessage
 //    public void givenServerClient_whenServerEchosMessage_thenCorrect() {
 //        String resp1 = client.sendMessage("hello");
 //        String resp2 = client.sendMessage("world");
