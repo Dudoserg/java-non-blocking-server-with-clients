@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="05f428c4-f337-46e4-a505-542de7833f8e" name="Default Changelist" comment="Сделал FreeFor - от кого готов клиент принимать сообщения объект">
-      <change afterPath="$PROJECT_DIR$/src/main/java/kek/person/Cook.java" afterDir="false" />
+    <list default="true" id="05f428c4-f337-46e4-a505-542de7833f8e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/kek/message/FROM_TO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kek/EchoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/EchoServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kek/message/Message.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/message/Message.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kek/message/MessageFreeForPersonType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/message/MessageFreeForPersonType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/kek/message/MessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/message/MessageType.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kek/message/MessageWrapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/message/MessageWrapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kek/person/Dispatchcer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/person/Dispatchcer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kek/person/Person.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/person/Person.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -23,8 +23,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/kek/EchoServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="177" column="33" selection-start-line="177" selection-start-column="33" selection-end-line="177" selection-end-column="33" />
+            <state relative-caret-position="317">
+              <caret line="491" column="9" lean-forward="true" selection-start-line="491" selection-start-column="9" selection-end-line="491" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="class#Attachment#0;class#EchoServer#0" />
@@ -38,10 +38,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessConfirm.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Buyer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="121" column="1" selection-start-line="121" selection-start-column="1" selection-end-line="121" selection-end-column="1" />
+            <state relative-caret-position="179">
+              <caret line="110" column="45" lean-forward="true" selection-start-line="110" selection-start-column="45" selection-end-line="110" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -141,15 +150,16 @@
         <option value="$PROJECT_DIR$/src/main/java/kek/person/Person.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/Client.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/person/EchoClient.java" />
+        <option value="$PROJECT_DIR$/src/main/java/kek/person/Buyer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/kek/person/Cook.java" />
+        <option value="$PROJECT_DIR$/src/main/java/kek/person/Dispatchcer.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/EchoServer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/kek/message/FROM_TO.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/message/Message.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/message/MessageFreeForPersonType.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/message/MessageType.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/message/MessageWrapper.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/message/MessConfirm.java" />
-        <option value="$PROJECT_DIR$/src/main/java/kek/person/Buyer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/kek/person/Cook.java" />
-        <option value="$PROJECT_DIR$/src/main/java/kek/person/Dispatchcer.java" />
       </list>
     </option>
   </component>
@@ -245,7 +255,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576429580239" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576435028623" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -257,6 +267,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="kek.message" />
       <recent name="kek.person" />
       <recent name="baeldung.message" />
     </key>
@@ -356,7 +367,7 @@
       <updated>1576250992077</updated>
       <workItem from="1576250997182" duration="16455000" />
       <workItem from="1576321823537" duration="38633000" />
-      <workItem from="1576417180621" duration="8752000" />
+      <workItem from="1576417180621" duration="10732000" />
     </task>
     <task id="LOCAL-00001" summary="СЛОЖНА">
       <created>1576270171294</created>
@@ -477,7 +488,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576422202144</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Переделываю FROM TO на массив, он будет хранить всю историю передач сообщения">
+      <created>1576429608609</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1576429608609</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -513,7 +531,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="63840000" />
+    <option name="totallyTimeSpent" value="65820000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
@@ -572,7 +590,8 @@
     <MESSAGE value="FreeFor - от кого готов принимать сообщения объект(4)" />
     <MESSAGE value="FreeFor - от кого готов принимать сообщения объект(5)" />
     <MESSAGE value="Сделал FreeFor - от кого готов клиент принимать сообщения объект" />
-    <option name="LAST_COMMIT_MESSAGE" value="Сделал FreeFor - от кого готов клиент принимать сообщения объект" />
+    <MESSAGE value="Переделываю FROM TO на массив, он будет хранить всю историю передач сообщения" />
+    <option name="LAST_COMMIT_MESSAGE" value="Переделываю FROM TO на массив, он будет хранить всю историю передач сообщения" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -787,65 +806,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/Message.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="52" selection-start-line="52" selection-end-line="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessageFreeForPersonType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#deserialize#0;class#MessageFreeForPersonType#0" />
-            <element signature="method#serialize#0;class#MessageFreeForPersonType#0" />
-            <element signature="method#serialize#1;class#MessageFreeForPersonType#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessageType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessageWrapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="98" selection-start-line="98" selection-end-line="98" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessConfirm.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="52" selection-start-line="52" selection-end-line="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/EchoServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="177" column="33" selection-start-line="177" selection-start-column="33" selection-end-line="177" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="class#Attachment#0;class#EchoServer#0" />
-            <element signature="e#3065#3367#0" />
-            <element signature="e#4673#4698#0" />
-            <element signature="e#9434#9500#0" />
-            <element signature="method#answerWithEcho#0;class#EchoServer#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Dispatchcer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="130">
@@ -862,8 +822,83 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Buyer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="121" column="1" selection-start-line="121" selection-start-column="1" selection-end-line="121" selection-end-column="1" />
+        <state relative-caret-position="179">
+          <caret line="110" column="45" lean-forward="true" selection-start-line="110" selection-start-column="45" selection-end-line="110" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/FROM_TO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="2" column="7" lean-forward="true" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessageType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessageFreeForPersonType.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="159">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#deserialize#0;class#MessageFreeForPersonType#0" />
+            <element signature="method#serialize#0;class#MessageFreeForPersonType#0" />
+            <element signature="method#serialize#1;class#MessageFreeForPersonType#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/Message.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="47" lean-forward="true" selection-start-line="47" selection-end-line="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessageWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="133" lean-forward="true" selection-start-line="133" selection-end-line="133" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#getMessConfirm#0;class#MessageWrapper#0" />
+            <element signature="method#setMessConfirm#0;class#MessageWrapper#0" />
+            <element signature="method#getMessage#0;class#MessageWrapper#0" />
+            <element signature="method#setMessage#0;class#MessageWrapper#0" />
+            <element signature="method#getMessageFreeForPersonType#0;class#MessageWrapper#0" />
+            <element signature="method#setMessageFreeForPersonType#0;class#MessageWrapper#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/EchoServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="317">
+          <caret line="491" column="9" lean-forward="true" selection-start-line="491" selection-start-column="9" selection-end-line="491" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="class#Attachment#0;class#EchoServer#0" />
+            <element signature="e#3065#3367#0" />
+            <element signature="e#4673#4698#0" />
+            <element signature="e#9434#9500#0" />
+            <element signature="method#answerWithEcho#0;class#EchoServer#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/MessConfirm.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="56" lean-forward="true" selection-start-line="56" selection-end-line="56" />
         </state>
       </provider>
     </entry>

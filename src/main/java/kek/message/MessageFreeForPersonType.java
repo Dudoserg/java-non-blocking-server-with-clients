@@ -2,12 +2,14 @@ package kek.message;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kek.person.Person;
 import kek.person.PersonType;
 import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 
 @Data
 @Getter
@@ -16,6 +18,9 @@ import java.util.List;
 @NoArgsConstructor
 public class MessageFreeForPersonType {
     private List<PersonType> list = new ArrayList<>();
+
+    private Integer port;
+    private Person person;
 
 
     @Override

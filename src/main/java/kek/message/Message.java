@@ -9,25 +9,20 @@ import lombok.*;
 @Data
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Message {
 
     private String message;
 
-    private Integer port;
-    private Person person;
 
-    public Message(String message, Integer port) {
+    public Message(String message) {
         this.message = message;
-        this.port = port;
     }
 
 
-    public static MessageBuilder builder(String message, Integer port){
+    public static MessageBuilder builder(String message){
         return hiddenBuilder()
-                .message(message)
-                .port(port);
+                .message(message);
     }
 
     // Jackson

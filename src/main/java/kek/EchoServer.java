@@ -409,7 +409,7 @@ public class EchoServer implements Runnable {
                 MessageWrapper.builder()
                         .str(messConfirm.serialize())
                         .messageType(MessageType.MESSAGE_CONFIRM)
-                        .toPort(myClient.getPort()).build();
+                        .build();
 
 
         String str = messageWrapper.serialize();
@@ -456,8 +456,6 @@ public class EchoServer implements Runnable {
                 break;
             }
             case MESSAGE: {
-                // Вытаскиваем сообщение о подтверждении
-                Message message = messageWrapper.getMessage();
                 Person p = clients_map.get(socketChannel).getPerson();
                 switch (p.getPersonType()) {
                     case BUYER: {
@@ -482,7 +480,6 @@ public class EchoServer implements Runnable {
                 break;
             }
             case MESSAGE_FREE_FOR_PERSONTYPE: {
-                // Вытаскиваем сообщение о подтверждении
                 MessageFreeForPersonType message = messageWrapper.getMessageFreeForPersonType();
                 // Клиент прислал сообщение о том, что он теперь не занят
                 System.out.println("socketChannel #" + client.getPort() + message.toString());

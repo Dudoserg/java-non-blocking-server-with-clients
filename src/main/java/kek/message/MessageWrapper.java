@@ -1,12 +1,16 @@
 package kek.message;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kek.person.Person;
 import kek.person.PersonType;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Builder
 @Data
@@ -15,56 +19,87 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MessageWrapper {
+
     // Передаваемый объект
     private String str;
     // Его тип
     private MessageType messageType;
 
-    // От кого сообщение
-    private Integer fromPort;
-    private Person fromPerson;
-    private PersonType fromPersonType;
+    public List<FROM_TO> history_List = new ArrayList<>();
 
-    // Кому адресовано
-    private Integer toPort;
-    private Person toPerson;
-    private PersonType toPersonType;
+    @JsonIgnore
+    public Integer getFromPort_last(){
+        return history_List.get(history_List.size()).fromPort;
+    }
+    @JsonIgnore
+    public Person getFromPerson_last(){
+        return history_List.get(history_List.size()).fromPerson;
+    }
+    @JsonIgnore
+    public PersonType getFromPersonType_last(){
+        return history_List.get(history_List.size()).fromPersonType;
+    }
 
-    //    @JsonIgnoreProperties
+    @JsonIgnore
+    public Integer getToPort_last(){
+        return history_List.get(history_List.size()).toPort;
+    }
+    @JsonIgnore
+    public Person getToPerson_last(){
+        return history_List.get(history_List.size()).toPerson;
+    }
+    @JsonIgnore
+    public PersonType getToPersonType_last(){
+        return history_List.get(history_List.size()).toPersonType;
+    }
+
+    ////////////////////////////////////////////
     // Сообщение с подтверждением регистрации
     @JsonIgnore
     public MessConfirm getMessConfirm() throws JsonProcessingException {
         return MessConfirm.deserialize(str);
     }
-
     @JsonIgnore
     public void setMessConfirm(MessConfirm messConfirm) throws JsonProcessingException {
         this.str = messConfirm.serialize();
         this.messageType = MessageType.MESSAGE_CONFIRM;
     }
 
+    ////////////////////////////////////////////
     // Обычное сообщение
     @JsonIgnore
     public Message getMessage() throws JsonProcessingException {
         return Message.deserialize(str);
     }
-
     @JsonIgnore
     public void setMessage(Message message) throws JsonProcessingException {
         this.str = message.serialize();
         this.messageType = MessageType.MESSAGE;
     }
 
-    // Обычное сообщение
+    ////////////////////////////////////////////
+    // Сообщение об ожидании для определенных персон
     @JsonIgnore
     public MessageFreeForPersonType getMessageFreeForPersonType() throws JsonProcessingException {
         return MessageFreeForPersonType.deserialize(str);
     }
-
     @JsonIgnore
     public void setMessageFreeForPersonType(MessageFreeForPersonType messageFreeForPersonType) throws JsonProcessingException {
         this.str = messageFreeForPersonType.serialize();
         this.messageType = MessageType.MESSAGE_FREE_FOR_PERSONTYPE;
+    }
+
+
+    ////////////////////////////////////////////
+    // Сообщение о снабжении ресурсами для философов
+    @JsonIgnore
+    public MessResource getMessResource() throws JsonProcessingException {
+        return MessResource.deserialize(str);
+    }
+    @JsonIgnore
+    public void setMessResource(MessResource message) throws JsonProcessingException {
+        this.str = message.serialize();
+        this.messageType = MessageType.MESSAGE_RESOURCE;
     }
 
 
