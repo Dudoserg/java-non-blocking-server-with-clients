@@ -163,6 +163,10 @@ public class EchoServer implements Runnable {
                                 flag = flag & toClient.isFree();
                                 if (!flag)
                                     continue;
+                                // ИМЕННО ДЛЯ НАС
+                                flag = flag & toClient.isFree(fromPersonType);
+                                if (!flag)
+                                    continue;
                                 // Если нужно отправить именно по порту, то добавим и его в проверку условия
                                 if (fromMessageWrapper.getToPort() != null)
                                     flag = flag & (fromMessageWrapper.getToPort().equals(toClient.getPort()));
@@ -484,7 +488,7 @@ public class EchoServer implements Runnable {
 
                 // Клиент прислал сообщение о том, что он теперь не занят
 
-                System.out.println("socketChannel #" + client.getPort() + " I_AM_FREE");
+                System.out.println("socketChannel #" + client.getPort() + message.toString());
                 // Помечаем его свободным, чтобы можно было послать ему сообщение
                 client.setFreeFor(message.getList());
                 client.setFree(true);

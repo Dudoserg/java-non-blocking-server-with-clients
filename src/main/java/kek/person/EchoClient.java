@@ -46,12 +46,10 @@ public class EchoClient implements Runnable {
                 Thread.sleep(10000);
                 System.out.println("i wake up");
 
-                person.send_I_Am_Free();
+
                 System.out.println("i send I_AM_FREE");
 
             }
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

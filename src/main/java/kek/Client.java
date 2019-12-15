@@ -27,6 +27,15 @@ public class Client {
     private boolean free = false;
     private List<PersonType> freeFor = new ArrayList<>();
 
+    public boolean isFree(PersonType personType){
+        if(freeFor != null){
+            return freeFor.contains(personType);
+        }
+        return false;
+    }
+    public boolean isFree( ){
+        return free;
+    }
     //
     private Person person;
 

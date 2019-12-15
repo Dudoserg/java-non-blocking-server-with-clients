@@ -6,6 +6,7 @@ import kek.person.PersonType;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Data
@@ -17,6 +18,14 @@ public class MessageFreeForPersonType {
     private List<PersonType> list = new ArrayList<>();
 
 
+
+
+    @Override
+    public String toString() {
+        return "MessageFreeForPersonType{" +
+                "list=" + Arrays.toString(this.list.toArray()) +
+                '}';
+    }
 
     // Jackson
     public static MessageFreeForPersonType deserialize(String serializedObject) throws JsonProcessingException {
