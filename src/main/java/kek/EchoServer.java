@@ -1,22 +1,23 @@
 package kek;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.util.Pair;
 import kek.message.MessConfirm;
 import kek.message.Message;
 import kek.message.MessageType;
 import kek.message.MessageWrapper;
-import kek.person.Buyer;
 import kek.person.Person;
 import kek.person.PersonType;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
-import java.time.LocalDateTime;
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -56,6 +57,8 @@ public class EchoServer implements Runnable {
     // Очередь запросов от покупателей
     List<Pair<Client, MessageWrapper>> buyerQueueList = new LinkedList<>();
     List<Pair<Client, MessageWrapper>> dispatcherQueueList = new LinkedList<>();
+    List<Pair<Client, MessageWrapper>> cookQueueList = new LinkedList<>();
+    List<Pair<Client, MessageWrapper>> courierQueueList = new LinkedList<>();
 
     HashMap<PersonType, List<Pair<Client, MessageWrapper>>> requestQueueHashMap
             = new HashMap<PersonType, List<Pair<Client, MessageWrapper>>>() {
@@ -153,15 +156,15 @@ public class EchoServer implements Runnable {
 
                                 // Клиент прошел регистрацию
                                 flag = flag & toClient.isClientNotified();
-                                if(!flag)
+                                if (!flag)
                                     continue;
                                 // Клиент нужного нам типа
                                 flag = flag & toClient.getPerson().getPersonType().equals(toPersonType);
-                                if(!flag)
+                                if (!flag)
                                     continue;
                                 // Клиент в данный момент свободен
                                 flag = flag & toClient.isFree();
-                                if(!flag)
+                                if (!flag)
                                     continue;
                                 // Если нужно отправить именно по порту, то добавим и его в проверку условия
                                 if (fromMessageWrapper.getToPort() != null)
@@ -219,7 +222,7 @@ public class EchoServer implements Runnable {
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }catch (NullPointerException e) {
+            } catch (NullPointerException e) {
                 e.printStackTrace();
             }
         }).start();
@@ -232,7 +235,12 @@ public class EchoServer implements Runnable {
 //
 //                    // Создаем буфер
 //                    ByteBuffer byteBuffer = ByteBuffer.allocate(4096);
-//                    String str = LocalDateTime.now().toLocalTime().toString();
+//                    String str = null;
+//                    try {
+//                        str = this.serialize();
+//                    } catch (JsonProcessingException e) {
+//                        e.printStackTrace();
+//                    }
 //                    // пихаем туда строку
 //                    byteBuffer.clear();
 //                    byteBuffer.put(str.getBytes());
@@ -250,7 +258,7 @@ public class EchoServer implements Runnable {
 //                        // Если клиент не занят
 //                        if (client.isClientNotified() && client.isFree()) {
 //                            // Если клиент открыт
-//                            if (socketChannel.isOpen()) {
+//                            if (socketChannel.isOpen() ) {
 //                                // Отправляем сообщение клиенту
 //                                try {
 //                                    // Пишем в него
@@ -328,11 +336,13 @@ public class EchoServer implements Runnable {
                             client.close();
                             System.out.println("Клиент #" + client.getPort() + " закрыт, Удаляем из списка");
 
-                            // удаляем из списков
-                            clients_map.remove(socketChannel);
 
                             semaphore_clients_list.acquire();
+
+                            // удаляем из списков
+                            clients_map.remove(socketChannel);
                             clients_list.remove(client);
+
                             semaphore_clients_list.release();
 
                             // Удалим запрос этого пользователя, если он был
@@ -448,9 +458,10 @@ public class EchoServer implements Runnable {
                 // Вытаскиваем сообщение о подтверждении
                 Message message = messageWrapper.getMessage();
 
-                // Клиент теперь освобожден
+                // Клиент прислал сообщение о том, что он теперь не занят
                 if (message.getMessage().equals("I AM FREE")) {
                     System.out.println("socketChannel #" + client.getPort() + " I_AM_FREE");
+                    // Помечаем его свободным, чтобы можно было послать ему сообщение
                     client.setFree(true);
                 } else {
                     Person p = clients_map.get(socketChannel).getPerson();
@@ -463,6 +474,14 @@ public class EchoServer implements Runnable {
                         case DISPATCHER: {
                             // Добавляем запрос от диспетчера в очередь
                             this.dispatcherQueueList.add(new Pair<>(client, messageWrapper));
+                            break;
+                        }
+                        case COOK:{
+                            this.cookQueueList.add(new Pair<>(client, messageWrapper));
+                            break;
+                        }
+                        case COURIER:{
+                            this.courierQueueList.add(new Pair<>(client, messageWrapper));
                             break;
                         }
                     }
@@ -519,4 +538,24 @@ public class EchoServer implements Runnable {
             peerKey.interestOps(SelectionKey.OP_WRITE);
         }
     }
+
+
+    // Jackson
+    public static EchoServer deserialize(String serializedObject) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        EchoServer messageFromClient = objectMapper.readValue(serializedObject, EchoServer.class);
+        return messageFromClient;
+    }
+
+    //Jackson
+    public static String serialize(EchoServer message) throws JsonProcessingException {
+
+        return new ObjectMapper().writeValueAsString(message);
+    }
+
+    //Jackson
+    public String serialize() throws JsonProcessingException {
+        return new ObjectMapper().writeValueAsString(this);
+    }
+
 }
