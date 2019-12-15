@@ -449,7 +449,7 @@ public class EchoServer implements Runnable {
                         // Запоминаем Тип клиента
                         client.setPerson(messConfirm.getPerson());
                         // Клиент готов к приему данных
-                        client.setFree(true);
+                        client.setFree(false);
                         System.out.println("socketChannel #" + client.getPort() + " isClientNotified = true");
                     }
                 }
