@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Buyer implements Runnable {
@@ -59,6 +60,15 @@ public class Buyer implements Runnable {
             System.out.println("Звоню , и заказываю " + message.getMessage());
             person.sendMessage(message, null, null, PersonType.DISPATCHER);
             System.out.println("Жду ответа");
+
+            // Говорим серверу, что готовы принимать сообщения от
+            person.send_I_Am_FreeFor(
+                    new ArrayList<PersonType>(){
+                        {
+                            add(PersonType.DISPATCHER);
+                        }
+                    }
+            );
 
             str = person.readMessage();
 //            System.out.println(str);

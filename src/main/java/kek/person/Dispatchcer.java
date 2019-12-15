@@ -52,6 +52,17 @@ public class Dispatchcer implements Runnable {
 
                 System.out.println("\n\nЖду какого-либо сообщения\t");
 
+                // Говорим серверу, что готовы принимать сообщения от
+                person.send_I_Am_FreeFor(
+                        new ArrayList<PersonType>(){
+                            {
+                                add(PersonType.BUYER);
+                                add(PersonType.COOK);
+                                add(PersonType.COURIER);
+                            }
+                        }
+                );
+
                 str = person.readMessage();
                 MessageWrapper messageWrapperFrom = MessageWrapper.deserialize(str);
                 System.out.println("i got message from " +
