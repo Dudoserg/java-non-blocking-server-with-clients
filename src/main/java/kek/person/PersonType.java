@@ -5,5 +5,6 @@ public enum PersonType {
     DISPATCHER,
     COURIER,
     COOK,
-    ICEBOX
+    ICEBOX,
+    RESOURCE
 }

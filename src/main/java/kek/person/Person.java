@@ -93,8 +93,6 @@ public class Person {
                 .builder()
                 .str(tmp)
                 .messageType(MessageType.MESSAGE_CONFIRM)
-                .fromPerson(this)
-                .fromPort(this.port)
                 .build();
 
         // Сериализуем и отправляем сообщение на сервер
@@ -115,9 +113,10 @@ public class Person {
                 .builder()
                 .str(tmp)
                 .messageType(MessageType.MESSAGE_FREE_FOR_PERSONTYPE)
-                .fromPerson(this)
-                .fromPort(this.port)
+
                 .build();
+
+
 
         // Сериализуем и отправляем сообщение на сервер
         String msg = messageWrapper.serialize();
@@ -126,34 +125,44 @@ public class Person {
         return send(msg);
     }
 
+//    @JsonIgnore
+//    public String sendMessage(Message obj, Integer toPort, Person toPerson,
+//                              PersonType toPersonType) throws JsonProcessingException {
+//
+//        String tmp = obj.serialize();
+//
+//        // Заворачиваем Сообщение в обертку
+//        MessageWrapper messageWrapper =
+//                MessageWrapper.builder()
+//                        .str(tmp)
+//                        .messageType(MessageType.MESSAGE)
+////                        .fromPerson(this)
+////                        .fromPort(this.port)
+////                        .fromPersonType(this.personType)
+////                        .toPort(toPort)
+////                        .toPerson(toPerson)
+////                        .toPersonType(toPersonType)
+//                        .build();
+//        FROM_TO from_to =
+//                FROM_TO.builder()
+//                        .fromPerson(this)
+//                        .fromPort(this.port)
+//                        .fromPersonType(this.personType)
+//                        .toPort(toPort)
+//                        .toPerson(toPerson)
+//                        .toPersonType(toPersonType)
+//                        .build();
+//        // От кого кому
+//        messageWrapper.history_List.add(from_to);
+//        // Сериализуем и отправляем сообщение на сервер
+//        String msg = messageWrapper.serialize();
+//
+//
+//        return send(msg);
+//    }
+
     @JsonIgnore
-    public String sendMessage(Message obj, Integer toPort, Person toPerson,
-                              PersonType toPersonType) throws JsonProcessingException {
-
-        String tmp = obj.serialize();
-
-        // Заворачиваем Сообщение в обертку
-        MessageWrapper messageWrapper = MessageWrapper
-                .builder()
-                .str(tmp)
-                .messageType(MessageType.MESSAGE)
-                .fromPerson(this)
-                .fromPort(this.port)
-                .fromPersonType(this.personType)
-                .toPort(toPort)
-                .toPerson(toPerson)
-                .toPersonType(toPersonType)
-                .build();
-
-        // Сериализуем и отправляем сообщение на сервер
-        String msg = messageWrapper.serialize();
-
-
-        return send(msg);
-    }
-
-    @JsonIgnore
-    private String send(String msg) {
+    public String send(String msg) {
         ByteBuffer buffer = ByteBuffer.allocate(4096);
         buffer.clear();
         buffer.put(msg.getBytes());
@@ -192,8 +201,8 @@ public class Person {
 
     @JsonIgnore
     public void send_I_Am_FreeFor(List<PersonType> list) throws JsonProcessingException {
-        MessageFreeForPersonType message = new MessageFreeForPersonType(list);
-
+        MessageFreeForPersonType message = new MessageFreeForPersonType(list,port, this);
+        System.out.println("\n\nЖду какого-либо сообщения\t от " + message);
 
         sendMessageFreeForPersonType(message);
 

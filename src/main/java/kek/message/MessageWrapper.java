@@ -1,7 +1,7 @@
 package kek.message;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kek.person.Person;
@@ -11,13 +11,11 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Builder
 @Data
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class MessageWrapper {
 
     // Передаваемый объект
@@ -25,32 +23,43 @@ public class MessageWrapper {
     // Его тип
     private MessageType messageType;
 
+    @Getter
+    @Setter
     public List<FROM_TO> history_List = new ArrayList<>();
+
+    public void init(){
+        if(history_List == null)
+            history_List = new ArrayList<>();
+    }
+
+    public MessageWrapper() {
+        init();
+    }
 
     @JsonIgnore
     public Integer getFromPort_last(){
-        return history_List.get(history_List.size()).fromPort;
+        return history_List.get(history_List.size() - 1).fromPort;
     }
     @JsonIgnore
     public Person getFromPerson_last(){
-        return history_List.get(history_List.size()).fromPerson;
+        return history_List.get(history_List.size() - 1).fromPerson;
     }
     @JsonIgnore
     public PersonType getFromPersonType_last(){
-        return history_List.get(history_List.size()).fromPersonType;
+        return history_List.get(history_List.size() - 1).fromPersonType;
     }
 
     @JsonIgnore
     public Integer getToPort_last(){
-        return history_List.get(history_List.size()).toPort;
+        return history_List.get(history_List.size() - 1).toPort;
     }
     @JsonIgnore
     public Person getToPerson_last(){
-        return history_List.get(history_List.size()).toPerson;
+        return history_List.get(history_List.size() - 1).toPerson;
     }
     @JsonIgnore
     public PersonType getToPersonType_last(){
-        return history_List.get(history_List.size()).toPersonType;
+        return history_List.get(history_List.size() - 1).toPersonType;
     }
 
     ////////////////////////////////////////////

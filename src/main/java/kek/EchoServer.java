@@ -134,7 +134,7 @@ public class EchoServer implements Runnable {
 
                             Client fromClient = pair.getKey();
                             MessageWrapper fromMessageWrapper = pair.getValue();
-                            PersonType toPersonType = fromMessageWrapper.getToPersonType();
+                            PersonType toPersonType = fromMessageWrapper.getToPersonType_last();
 
                             //Message message = null;
                             //try {
@@ -168,8 +168,8 @@ public class EchoServer implements Runnable {
                                 if (!flag)
                                     continue;
                                 // Если нужно отправить именно по порту, то добавим и его в проверку условия
-                                if (fromMessageWrapper.getToPort() != null)
-                                    flag = flag & (fromMessageWrapper.getToPort().equals(toClient.getPort()));
+                                if (fromMessageWrapper.getToPort_last() != null)
+                                    flag = flag & (fromMessageWrapper.getToPort_last().equals(toClient.getPort()));
 
                                 // проверяем, данный клиент является ли тем, кому надо послать сообщение
                                 // и то, что он свободен в данный момент
@@ -487,6 +487,13 @@ public class EchoServer implements Runnable {
                 client.setFreeFor(message.getList());
                 // Помечаем его свободным, чтобы можно было послать ему сообщение
                 client.setFree(true);
+                break;
+            }
+            case MESSAGE_RESOURCE: {
+                MessResource message = messageWrapper.getMessResource();
+                // Клиент прислал сообщение о том, что он теперь не занят
+                System.out.println("socketChannel #" + client.getPort() + message.toString());
+
                 break;
             }
         }

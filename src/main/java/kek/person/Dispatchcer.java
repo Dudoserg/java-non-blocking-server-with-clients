@@ -2,7 +2,9 @@ package kek.person;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import kek.message.FROM_TO;
 import kek.message.Message;
+import kek.message.MessageType;
 import kek.message.MessageWrapper;
 
 import java.io.FileReader;
@@ -65,8 +67,9 @@ public class Dispatchcer implements Runnable {
                 str = person.readMessage();
                 MessageWrapper messageWrapperFrom = MessageWrapper.deserialize(str);
                 System.out.println("i got message from " +
-                        messageWrapperFrom.getFromPerson().getPersonType());
-                switch (messageWrapperFrom.getFromPerson().getPersonType()) {
+                        messageWrapperFrom.getFromPerson_last().getPersonType());
+                // Смотрим от кого пришло сообщение
+                switch (messageWrapperFrom.getFromPerson_last().getPersonType()) {
                     case BUYER: {
                         Message messageFromBuyer = messageWrapperFrom.getMessage();
                         System.out.println("Он хочет : " + messageFromBuyer.getMessage());
@@ -75,37 +78,34 @@ public class Dispatchcer implements Runnable {
                         System.out.println("Передаю сообщение повару");
                         this.person.working(5);
 
+                        // Шлем ответ Любому повару
+                        Message messageTo = null;
+                        MessageWrapper messageWrapperToCook = null;
+                        {
+                            messageTo = Message.builder(messageFromBuyer.getMessage())
+                                    .build();
 
-                        // Шлем ответ имеено данному покупателю
-                        Message messageTo = new Message();
+                            messageWrapperToCook = MessageWrapper.builder()
+                                    .str(messageTo.serialize())
+                                    .messageType(MessageType.MESSAGE)
+                                    .history_List(messageWrapperFrom.history_List)
+                                    .build();
+                            // Шлем ответ Любому повару
+                            FROM_TO from_to =
+                                    FROM_TO.builder()
+                                            .fromPerson(this.person)
+                                            .fromPort(this.person.port)
+                                            .fromPersonType(this.person.personType)
+                                            .toPort(null)
+                                            .toPerson(null)
+                                            .toPersonType(PersonType.COOK)
+                                            .build();
+                            messageWrapperToCook.history_List.add(from_to);
+                        }
+                        this.person.send(messageWrapperToCook.serialize());
 
-                        messageTo.setMessage(messageFromBuyer.getMessage());
+                        System.out.println("Сообщение Повару Отправлено");
 
-                        // Отправляем сообщение ЛЮБОМУ ПОВАРУ
-                        this.person.sendMessage(
-                                messageTo,
-                                null,
-                                null, messageWrapperFrom.getFromPersonType()
-                        );
-                        System.out.println("Сообщение передано");
-
-//                        // Шлем ответ имеено данному покупателю
-//                        Message messageTo = new Message();
-//
-//                        messageTo.setMessage("========================" +
-//                                "========================\n" +
-//                                messageFromBuyer.getMessage().toUpperCase() +
-//                                " ZAKAZ GOTOV ;-)\n" +
-//                                "========================" +
-//                                "========================");
-//
-//                        // Отправляем сообщение КОНКРЕТНОМУ покупателю
-//                        this.person.sendMessage(
-//                                messageTo,
-//                                messageWrapperFrom.getFromPort(),
-//                                messageWrapperFrom.getFromPerson(),
-//                                messageWrapperFrom.getFromPersonType()
-//                        );
                         break;
                     }
                     case COURIER: {

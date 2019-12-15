@@ -2,8 +2,7 @@ package kek.person;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kek.message.Message;
-import kek.message.MessageWrapper;
+import kek.message.*;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -25,7 +24,7 @@ public class Cook implements Runnable {
 
     public Cook() {
         try {
-            person = new Person(PersonType.DISPATCHER, "BATYA");
+            person = new Person(PersonType.COOK, "CookOLD");
             person.socketChannel =
                     SocketChannel.open(new InetSocketAddress("localhost", 3443));
         } catch (IOException e) {
@@ -36,6 +35,8 @@ public class Cook implements Runnable {
 
     @Override
     public void run() {
+        int resource_1 = 1;
+        int resource_2 = 2;
 
         System.out.println(this.person.getPersonName() + " start");
         //Scanner in = new Scanner(System.in);
@@ -63,13 +64,61 @@ public class Cook implements Runnable {
                 str = person.readMessage();
 
                 MessageWrapper messageWrapperFrom = MessageWrapper.deserialize(str);
+
                 System.out.println("i got message from " +
-                        messageWrapperFrom.getFromPerson().getPersonType());
+                        messageWrapperFrom.getFromPerson_last().getPersonType());
+
                 Message message = messageWrapperFrom.getMessage();
 
                 // ПИЦЦА
                 if(message.getMessage().contains("pizza")){
+                    // Запрашиваю ресурсы у сервера ( Я Ж ФИЛАСАФ))
+                    MessResource messResource = null ;
+                    MessageWrapper messageWrapperResource = null;
+                    {
+                        messResource = new MessResource(
+                                new ArrayList<Integer>(){{
+                                    add(resource_1);
+                                    add(resource_2);
+                                }},
+                                ResourceType.NEED
+                        );
+                        messageWrapperResource = MessageWrapper.builder()
+                                .str(messResource.serialize())
+                                .messageType(MessageType.MESSAGE_RESOURCE)
+                                .build();
+                        // Шлем СЕРВЕРУ
+                        FROM_TO from_to =
+                                FROM_TO.builder()
+                                        .fromPerson(this.person)
+                                        .fromPort(this.person.port)
+                                        .fromPersonType(this.person.personType)
+                                        .toPort(null)
+                                        .toPerson(null)
+                                        .toPersonType(null)
+                                        .build();
+                        messageWrapperResource.init();
+                        messageWrapperResource.history_List.add(from_to);
+                    }
+                    person.send(messageWrapperResource.serialize());
 
+                    // Говорим серваку, что мы можем принять только ресурсы от самого сервера
+                    person.send_I_Am_FreeFor(
+                            new ArrayList<PersonType>(){
+                                {
+                                    add(PersonType.RESOURCE);
+                                }
+                            }
+                    );
+                    str = person.readMessage();
+
+                    // Получил ресурсы, готовлю
+                    System.out.println("Я получил нужные мне ресурсы");
+                    // готовлю
+                    this.person.working(7);
+                    // Возвращаю ресурсы серверу
+
+                    // Отправляю заказ
                 }
 
                 // Говорим серверу что готовы принимать сообщения от
@@ -85,6 +134,8 @@ public class Cook implements Runnable {
 
             }
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 //        catch (InterruptedException e) {

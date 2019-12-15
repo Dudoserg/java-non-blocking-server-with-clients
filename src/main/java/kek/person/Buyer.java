@@ -2,7 +2,9 @@ package kek.person;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import kek.message.FROM_TO;
 import kek.message.Message;
+import kek.message.MessageType;
 import kek.message.MessageWrapper;
 
 import java.io.IOException;
@@ -52,33 +54,54 @@ public class Buyer implements Runnable {
             //while (true) {
 
 
+            Message message = null;
 
-            Message message = new Message();
-            message.setMessage("pizza" + num);
-            message.setPort(this.person.port);
-            message.setPerson(this.person);
-            System.out.println("Звоню , и заказываю " + message.getMessage());
-            person.sendMessage(message, null, null, PersonType.DISPATCHER);
-            System.out.println("Жду ответа");
 
-            // Говорим серверу, что готовы принимать сообщения от
+            MessageWrapper messageWrapper = null;
+            {
+                message = Message.builder("pizza" + num).build();
+                System.out.println("Звоню , и заказываю " + message.getMessage());
+
+                messageWrapper = MessageWrapper.builder()
+                        .str(message.serialize())
+                        .messageType(MessageType.MESSAGE)
+                        .build();
+                FROM_TO from_to =
+                        FROM_TO.builder()
+                                .fromPerson(person)
+                                .fromPort(person.port)
+                                .fromPersonType(person.personType)
+                                .toPort(null)
+                                .toPerson(null)
+                                .toPersonType(PersonType.DISPATCHER)
+                                .build();
+                messageWrapper.init();
+                messageWrapper.history_List.add(from_to);
+            }
+            // Отправляем сообщение
+            str = messageWrapper.serialize();
+            person.send(str);
+
+
+            // Говорим серверу, что готовы принимать сообщения от ДИСПЕТЧЕРА
             person.send_I_Am_FreeFor(
-                    new ArrayList<PersonType>(){
+                    new ArrayList<PersonType>() {
                         {
                             add(PersonType.DISPATCHER);
                         }
                     }
             );
-
             str = person.readMessage();
-//            System.out.println(str);
 
-            MessageWrapper messageWrapper = MessageWrapper.deserialize(str);
+
+
+            messageWrapper = MessageWrapper.deserialize(str);
             Message fromMessage = messageWrapper.getMessage();
-            switch (messageWrapper.getFromPerson().getPersonType()){
-                case DISPATCHER:{
+
+            switch (messageWrapper.getFromPerson_last().getPersonType()) {
+                case DISPATCHER: {
                     System.out.println("Получил ответ от " +
-                            messageWrapper.getFromPerson().getPersonType());
+                            messageWrapper.getFromPerson_last().getPersonType());
                     System.out.println("i got  " + fromMessage.getMessage());
 
                     System.out.println("Начинаю есть свой заказ");
@@ -87,9 +110,9 @@ public class Buyer implements Runnable {
 
                     break;
                 }
-                case COURIER:{
+                case COURIER: {
                     System.out.println("Получил ответ от " +
-                            messageWrapper.getFromPerson().getPersonType());
+                            messageWrapper.getFromPerson_last().getPersonType());
                     break;
                 }
             }

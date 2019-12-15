@@ -2,11 +2,11 @@ package kek.message;
 
 import kek.person.Person;
 import kek.person.PersonType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class FROM_TO {
