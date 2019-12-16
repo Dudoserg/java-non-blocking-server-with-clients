@@ -10,7 +10,9 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Cook implements Runnable {
 
@@ -51,6 +53,12 @@ public class Cook implements Runnable {
             else
                 break;
         }
+
+        System.out.println("Мне нужны ресурсы # " +
+                needResourcesList.stream()
+                        .map(Objects::toString)
+                        .collect(Collectors.joining(", "))
+        );
 
 
         System.out.println(this.person.getPersonName() + " start");

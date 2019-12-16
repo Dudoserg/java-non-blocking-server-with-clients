@@ -2,10 +2,7 @@ package kek.person;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kek.message.FROM_TO;
-import kek.message.Message;
-import kek.message.MessageType;
-import kek.message.MessageWrapper;
+import kek.message.*;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,7 +14,7 @@ public class Courier implements Runnable {
 
 
     private Person person;
-    private Integer _1000 = 500;
+    private Integer _1000 = 600;
 
     public static void main(String[] args) throws JsonProcessingException {
         Courier courier = new Courier();

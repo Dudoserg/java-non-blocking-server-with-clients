@@ -10,6 +10,7 @@ import kek.message.MessageWrapper;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class Buyer implements Runnable {
 
 
     private Person person;
-    private Integer _1000 = 1000;
+    private Integer _1000 = 500;
 
     public static void main(String[] args) throws JsonProcessingException {
         Buyer buyer = new Buyer();
