@@ -50,7 +50,11 @@ public class EchoServer implements Runnable {
     }
 
     Selector selector = null;
-    ServerSocketChannel serverSocket;
+    ServerSocketChannel serverSocket_1;
+    ServerSocketChannel serverSocket_2;
+    SelectionKey selectionKey_1;
+    SelectionKey selectionKey_2;
+
     ByteBuffer buffer;
 
     Thread_SendMessage threadSendMessage;
@@ -87,10 +91,17 @@ public class EchoServer implements Runnable {
     public EchoServer() {
         try {
             selector = Selector.open();
-            serverSocket = ServerSocketChannel.open();
-            serverSocket.bind(new InetSocketAddress("localhost", 3443));
-            serverSocket.configureBlocking(false);
-            serverSocket.register(selector, SelectionKey.OP_ACCEPT);
+            serverSocket_1 = ServerSocketChannel.open();
+            serverSocket_1.bind(new InetSocketAddress("localhost", 3443));
+            serverSocket_1.configureBlocking(false);
+            selectionKey_1 = serverSocket_1.register(selector, SelectionKey.OP_ACCEPT);
+
+            serverSocket_2 = ServerSocketChannel.open();
+            serverSocket_2.bind(new InetSocketAddress("192.168.1.2", 3443));
+            serverSocket_2.configureBlocking(false);
+            selectionKey_2 = serverSocket_2.register(selector, SelectionKey.OP_ACCEPT);
+
+
             buffer = ByteBuffer.allocate(16384);
         } catch (IOException e) {
             e.printStackTrace();
@@ -461,7 +472,10 @@ public class EchoServer implements Runnable {
 
                     if (key.isAcceptable()) {
 
-                        register(selector, serverSocket);
+                        if(key.equals(selectionKey_1))
+                            register(selector, serverSocket_1);
+                        else if(key.equals(selectionKey_2))
+                            register(selector, serverSocket_2);
 
                     } else if (key.isReadable()) {
                         // Проверяем, не отвалился ли клиент, если происходит отвал
