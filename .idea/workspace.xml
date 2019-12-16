@@ -4,8 +4,6 @@
     <list default="true" id="05f428c4-f337-46e4-a505-542de7833f8e" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/kek/EchoServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/EchoServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/kek/message/ResourceType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/kek/message/ResourceType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Socks4Proxy.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Socks4Proxy.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -20,8 +18,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/kek/EchoServer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-497">
-              <caret line="257" column="28" lean-forward="true" selection-start-line="257" selection-start-column="28" selection-end-line="257" selection-end-column="28" />
+            <state relative-caret-position="306">
+              <caret line="249" column="17" lean-forward="true" selection-start-line="249" selection-start-column="17" selection-end-line="249" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="class#Attachment#0;class#EchoServer#0" />
@@ -31,15 +29,6 @@
                 <element signature="e#9434#9500#0" />
                 <element signature="method#answerWithEcho#0;class#EchoServer#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Cook.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="377">
-              <caret line="165" column="1" selection-start-line="165" selection-start-column="1" selection-end-line="165" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -136,10 +125,10 @@
         <option value="$PROJECT_DIR$/src/main/java/kek/message/MessageWrapper.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/person/Buyer.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/person/Dispatchcer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/kek/person/Cook.java" />
-        <option value="$PROJECT_DIR$/src/main/java/kek/person/Person.java" />
         <option value="$PROJECT_DIR$/src/main/java/Socks4Proxy.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/message/ResourceType.java" />
+        <option value="$PROJECT_DIR$/src/main/java/kek/person/Cook.java" />
+        <option value="$PROJECT_DIR$/src/main/java/kek/person/Person.java" />
         <option value="$PROJECT_DIR$/src/main/java/kek/EchoServer.java" />
       </list>
     </option>
@@ -236,7 +225,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576484112781" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1576488509739" />
     <property name="extract.method.default.visibility" value="private" />
     <property name="ignore_missing_gitignore" value="true" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -348,7 +337,7 @@
       <updated>1576250992077</updated>
       <workItem from="1576250997182" duration="16455000" />
       <workItem from="1576321823537" duration="38633000" />
-      <workItem from="1576417180621" duration="17891000" />
+      <workItem from="1576417180621" duration="22199000" />
     </task>
     <task id="LOCAL-00001" summary="СЛОЖНА">
       <created>1576270171294</created>
@@ -497,7 +486,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576439669722</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Повар-философ получает и возвращает ресурсы">
+      <created>1576484138126</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1576484138126</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -533,7 +529,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="72979000" />
+    <option name="totallyTimeSpent" value="77287000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
@@ -548,8 +544,8 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32974428" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32032302" />
-      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.3755047" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32032302" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.3755047" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -596,7 +592,8 @@
     <MESSAGE value="Добавил сообщение с ресурсами" />
     <MESSAGE value="Сообщения доходят до повара, повар отправляет запрос на ресурсы&#10;Реализовать отправку ресурсов поварам - философам" />
     <MESSAGE value="Сервер раздает ресурсы&#10;Нужно сделать еще и освобождение" />
-    <option name="LAST_COMMIT_MESSAGE" value="Сервер раздает ресурсы&#10;Нужно сделать еще и освобождение" />
+    <MESSAGE value="Повар-философ получает и возвращает ресурсы" />
+    <option name="LAST_COMMIT_MESSAGE" value="Повар-философ получает и возвращает ресурсы" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -888,23 +885,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Person.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1174">
-          <caret line="231" column="7" lean-forward="true" selection-start-line="231" selection-start-column="7" selection-end-line="231" selection-end-column="7" />
-          <folding>
-            <element signature="e#5255#5789#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Cook.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="165" column="1" selection-start-line="165" selection-start-column="1" selection-end-line="165" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/kek/message/ResourceType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="108">
@@ -912,10 +892,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Person.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="485">
+          <caret line="251" selection-start-line="251" selection-end-line="251" />
+          <folding>
+            <element signature="e#5256#5791#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/kek/person/Cook.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="485">
+          <caret line="231" column="1" selection-start-line="231" selection-start-column="1" selection-end-line="231" selection-end-column="1" />
+          <folding>
+            <element signature="class#3901:4086" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/kek/EchoServer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-497">
-          <caret line="257" column="28" lean-forward="true" selection-start-line="257" selection-start-column="28" selection-end-line="257" selection-end-column="28" />
+        <state relative-caret-position="306">
+          <caret line="249" column="17" lean-forward="true" selection-start-line="249" selection-start-column="17" selection-end-line="249" selection-end-column="17" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="class#Attachment#0;class#EchoServer#0" />

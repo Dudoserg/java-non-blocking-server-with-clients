@@ -78,8 +78,8 @@ public class EchoServer implements Runnable {
         {
             put(PersonType.BUYER, buyerQueueList);
             put(PersonType.DISPATCHER, dispatcherQueueList);
-//            put(PersonType.COOK, cookQueueList);
-//            put(PersonType.COURIER, courierQueueList);
+            put(PersonType.COOK, cookQueueList);
+            put(PersonType.COURIER, courierQueueList);
         }
     };
 
