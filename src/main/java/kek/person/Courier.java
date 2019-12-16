@@ -2,7 +2,10 @@ package kek.person;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import kek.message.*;
+import kek.message.FROM_TO;
+import kek.message.Message;
+import kek.message.MessageType;
+import kek.message.MessageWrapper;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -70,8 +73,8 @@ public class Courier implements Runnable {
 
 
                 // Ищем покупателя в истории, и берем его порт
-                for (FROM_TO currentFROM_TO : messageWrapperFromCook.history_List){
-                    if( currentFROM_TO.getFromPersonType().equals(PersonType.BUYER))
+                for (FROM_TO currentFROM_TO : messageWrapperFromCook.history_List) {
+                    if (currentFROM_TO.getFromPersonType().equals(PersonType.BUYER))
                         portBuyer = currentFROM_TO.getFromPort();
                 }
 
@@ -81,7 +84,6 @@ public class Courier implements Runnable {
                 this.person.working(5);
                 System.out.println("Приехал");
                 Thread.sleep(_1000);
-
 
 
                 // Передаю готовый заказ покупателю

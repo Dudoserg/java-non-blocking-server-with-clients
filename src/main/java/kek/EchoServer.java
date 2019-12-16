@@ -17,8 +17,6 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 import java.util.concurrent.Semaphore;
-import java.util.function.IntConsumer;
-import java.util.stream.IntStream;
 
 public class EchoServer implements Runnable {
 

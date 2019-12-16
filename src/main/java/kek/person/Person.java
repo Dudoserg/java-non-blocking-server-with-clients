@@ -5,10 +5,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import kek.message.*;
 import lombok.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Getter
@@ -257,6 +261,15 @@ public class Person {
             Thread.sleep( this._1000);
         }
         System.out.println("Закончил");
+    }
+
+
+    public Setting readSetting(String fileName) throws FileNotFoundException {
+        List<String> list = new ArrayList<String>();
+        Scanner in = new Scanner(new File(fileName));
+        while (in.hasNextLine())
+            list.add(in.nextLine());
+        return new Setting(list.get(0), Integer.valueOf(list.get(1)));
     }
 
 }
