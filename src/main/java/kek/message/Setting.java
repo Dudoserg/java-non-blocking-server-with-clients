@@ -13,3 +13,4 @@ public class Setting {
     private String ip;
     private Integer port;
 }
+

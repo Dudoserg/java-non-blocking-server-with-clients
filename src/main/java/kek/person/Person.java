@@ -2,6 +2,7 @@ package kek.person;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import kek.message.*;
 import lombok.*;
 
