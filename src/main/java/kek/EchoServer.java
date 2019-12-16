@@ -83,7 +83,7 @@ public class EchoServer implements Runnable {
         }
     };
 
-    List<Boolean> freeResources = new ArrayList<>();
+    Boolean freeResources[];
     List<Pair<Client, MessageWrapper>> needResource = new ArrayList<>();
 
     public EchoServer() {
@@ -102,7 +102,11 @@ public class EchoServer implements Runnable {
 
     public void init() {
         // Инициализируем 100 ресурсов, ну шоб с запасом
-        IntStream.range(0, 100).forEach(value -> freeResources.add(true));
+//        IntStream.range(0, 100).forEach(value -> freeResources.add(true));
+        freeResources = new Boolean[100];
+        for(int i = 0 ; i < freeResources.length; i++){
+            freeResources[i] = true;
+        }
     }
 
     @Override
@@ -115,11 +119,12 @@ public class EchoServer implements Runnable {
         new Thread(() -> {
             while (true) {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //System.gc();
+                System.gc();
+//                System.out.println("GC from " + Thread.currentThread().getId() + "\t" + Thread.currentThread().getName());
                 System.out.println(".");
             }
         }).start();
@@ -129,7 +134,7 @@ public class EchoServer implements Runnable {
             try {
                 while (true) {
 
-                    // Перебираем все запросы
+                    // Перебираем все запросы на ресурсы
                     Iterator<Pair<Client, MessageWrapper>> it = needResource.iterator();
                     while (it.hasNext()) {
                         Pair<Client, MessageWrapper> pair = it.next();
@@ -143,7 +148,7 @@ public class EchoServer implements Runnable {
                             boolean allResourcesIsFree = true;
                             for (int i = 0; i < messResource.getResource().size(); i++) {
                                 int numNeedResource = messResource.getResource().get(i);
-                                if (freeResources.get(numNeedResource) == false) {
+                                if (freeResources[numNeedResource] == false) {
                                     allResourcesIsFree = false;
                                     // Дальше уже можно не проверять, один из необходимых ресурсов занят
                                     break;
@@ -155,7 +160,7 @@ public class EchoServer implements Runnable {
                                 // Блокируем ресурсы
                                 for (int q = 0; q < messResource.getResource().size(); q++) {
                                     int numNeedResource = messResource.getResource().get(q);
-                                    this.freeResources.set(numNeedResource, false);
+                                    this.freeResources[numNeedResource] = false;
                                 }
                                 // отправляем их юзеру
                                 ByteBuffer byteBuffer = ByteBuffer.allocate(16384);
@@ -206,8 +211,30 @@ public class EchoServer implements Runnable {
                     // Делаем это в отдельном цикле, чтобы не нарушить очередность
                     // т.к. вернуть может 5й из списка, а получит ресурсы 10й, хотя их же ждет 1й в очереди
 
+                    // Перебираем все запросы
+                    it = needResource.iterator();
+                    while (it.hasNext()) {
+                        Pair<Client, MessageWrapper> pair = it.next();
+                        Client client = pair.getKey();
+                        SocketChannel socketChannel = client.getSocketChannel();
+                        MessageWrapper messageWrapper = pair.getValue();
+                        MessResource messResource = messageWrapper.getMessResource();
+
+                        // Если пользователь ОСВОБОЖДАЕТ ресурсы
+                        if (messResource.getResourceType().equals(ResourceType.RETURN)) {
+
+                            for(int i = 0 ; i < messResource.getResource().size(); i++){
+                                if(this.freeResources[messResource.getResource().get(i)])
+                                    System.out.println("Чета не то с ресурсами, мы освобождаем свободный)00");
+                                this.freeResources[messResource.getResource().get(i)] = true;
+                            }
+                            // Удаляем сообщение об освобождении, т.к. уже освободили
+                            it.remove();
+                        }
+                    }
+
                     try {
-                        Thread.sleep(150);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -322,7 +349,7 @@ public class EchoServer implements Runnable {
                     semaphore_clients_list.release();
 
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(500);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

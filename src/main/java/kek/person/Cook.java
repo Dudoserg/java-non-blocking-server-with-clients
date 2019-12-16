@@ -38,6 +38,7 @@ public class Cook implements Runnable {
         int resource_1 = 1;
         int resource_2 = 2;
 
+
         System.out.println(this.person.getPersonName() + " start");
         //Scanner in = new Scanner(System.in);
         //System.out.print("Input a number for start working работы крч: ");
@@ -54,7 +55,7 @@ public class Cook implements Runnable {
 
                 // Говорим серверу что готовы принимать сообщения от
                 person.send_I_Am_FreeFor(
-                        new ArrayList<PersonType>(){
+                        new ArrayList<PersonType>() {
                             {
                                 add(PersonType.DISPATCHER);
                             }
@@ -69,17 +70,18 @@ public class Cook implements Runnable {
                         messageWrapperFrom.getFromPerson_last().getPersonType());
 
                 Message message = messageWrapperFrom.getMessage();
-
+                String order = message.getMessage();
                 // ПИЦЦА
-                if(message.getMessage().contains("pizza")){
+                if (order.contains("pizza")) {
                     // Запрашиваю ресурсы у сервера ( Я Ж ФИЛАСАФ))
-                    MessResource messResource = null ;
+                    MessResource messResource = null;
                     MessageWrapper messageWrapperResource = null;
                     {
                         messResource = new MessResource(
-                                new ArrayList<Integer>(){{
+                                new ArrayList<Integer>() {{
                                     add(resource_1);
                                     add(resource_2);
+                                    add(7);
                                 }},
                                 ResourceType.NEED
                         );
@@ -104,7 +106,7 @@ public class Cook implements Runnable {
 
                     // Говорим серваку, что мы можем принять только ресурсы от самого сервера
                     person.send_I_Am_FreeFor(
-                            new ArrayList<PersonType>(){
+                            new ArrayList<PersonType>() {
                                 {
                                     add(PersonType.RESOURCE);
                                 }
@@ -112,24 +114,90 @@ public class Cook implements Runnable {
                     );
                     str = person.readMessage();
 
+
+                    // Проверяем что ресурсы пришли нужные
+
+
                     // Получил ресурсы, готовлю
                     System.out.println("Я получил нужные мне ресурсы");
                     // готовлю
-                    this.person.working(7);
+                    System.out.println("Готовлю");
+                    this.person.working(2);
+                    System.out.println("Приготовил");
+
+
                     // Возвращаю ресурсы серверу
+                    System.out.println("Возвращаю ресурсы серверу");
+                    this.person.working(2);
+                    MessResource messResourceReturn = null;
+                    MessageWrapper messageWrapperResourceReturn = null;
+                    {
+                        messResourceReturn = new MessResource(
+                                new ArrayList<Integer>() {{
+                                    add(resource_1);
+                                    add(resource_2);
+                                    add(7);
+                                }},
+                                ResourceType.RETURN
+                        );
+                        messageWrapperResourceReturn = MessageWrapper.builder()
+                                .str(messResourceReturn.serialize())
+                                .messageType(MessageType.MESSAGE_RESOURCE)
+                                .build();
+                        // Шлем СЕРВЕРУ
+                        FROM_TO from_to =
+                                FROM_TO.builder()
+                                        .fromPerson(this.person)
+                                        .fromPort(this.person.port)
+                                        .fromPersonType(this.person.personType)
+                                        .toPort(null)
+                                        .toPerson(null)
+                                        .toPersonType(null)
+                                        .build();
+                        messageWrapperResourceReturn.init();
+                        messageWrapperResourceReturn.history_List.add(from_to);
+                    }
+                    person.send(messageWrapperResourceReturn.serialize());
+                    System.out.println("Ресурсы отправлены на сервер");
+
 
                     // Отправляю заказ
+                    Message message_Gotoviy = null;
+                    MessageWrapper messageWrapper_Gotoviy = null;
+                    {
+                        message_Gotoviy = Message.builder(order).build();
+
+                        messageWrapper_Gotoviy = MessageWrapper.builder()
+                                .str(message_Gotoviy.serialize())
+                                .messageType(MessageType.MESSAGE)
+                                // Сохраняем историю передачи сообщения, чтобы знать
+                                // от какого покупателя, и каким диспетчером обслужено
+                                .history_List(messageWrapperFrom.history_List)
+                                .build();
+                        // Шлем ЛЮБОМУ КУРЬЕРУ
+                        FROM_TO from_to =
+                                FROM_TO.builder()
+                                        .fromPerson(this.person)
+                                        .fromPort(this.person.port)
+                                        .fromPersonType(this.person.personType)
+                                        .toPort(null)
+                                        .toPerson(null)
+                                        .toPersonType(PersonType.COURIER)
+                                        .build();
+                        // Добавляем в историю передачи сообщения, то что заказ отправлен от нас
+                        messageWrapper_Gotoviy.history_List.add(from_to);
+                    }
+                    person.send(messageWrapper_Gotoviy.serialize());
                 }
 
                 // Говорим серверу что готовы принимать сообщения от
                 person.send_I_Am_FreeFor(
-                        new ArrayList<PersonType>(){
+                        new ArrayList<PersonType>() {
                             {
                                 add(PersonType.DISPATCHER);
                             }
                         }
                 );
-                System.out.println("i send I_AM_FREE");
 
 
             }
@@ -145,18 +213,16 @@ public class Cook implements Runnable {
     }
 
 
-    private String readFromFile(String fileName){
+    private String readFromFile(String fileName) {
         String result = "";
-        try(FileReader reader = new FileReader(fileName))
-        {
+        try (FileReader reader = new FileReader(fileName)) {
             // читаем посимвольно
             int c;
-            while((c=reader.read())!=-1){
+            while ((c = reader.read()) != -1) {
                 //System.out.print((char)c);
                 result += (char) c;
             }
-        }
-        catch(IOException ex){
+        } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
         return result;
