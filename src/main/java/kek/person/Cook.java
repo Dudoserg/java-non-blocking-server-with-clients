@@ -9,12 +9,14 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Cook implements Runnable {
 
 
     private Person person;
-
+    private Integer _1000 = 1000;
 
     public static void main(String[] args) throws JsonProcessingException {
         Cook cook = new Cook();
@@ -25,6 +27,7 @@ public class Cook implements Runnable {
     public Cook() {
         try {
             person = new Person(PersonType.COOK, "CookOLD");
+            person.set_1000(this._1000);
             person.socketChannel =
                     SocketChannel.open(new InetSocketAddress("localhost", 3443));
         } catch (IOException e) {
@@ -35,8 +38,19 @@ public class Cook implements Runnable {
 
     @Override
     public void run() {
-        int resource_1 = 1;
-        int resource_2 = 2;
+        List<Integer> needResourcesList = new ArrayList<>();
+
+        System.out.println("Введите ресурсы, которые необходимы данному повару");
+        Scanner in = new Scanner(System.in);
+        int num = 0;
+        while (true) {
+            System.out.print("Введите номер следующего ресурса ( 0 для выхода): ");
+            num = in.nextInt();
+            if( num != 0)
+                needResourcesList.add(num);
+            else
+                break;
+        }
 
 
         System.out.println(this.person.getPersonName() + " start");
@@ -52,6 +66,7 @@ public class Cook implements Runnable {
         // Начинается рабочий цикл
         try {
             while (true) {
+                System.out.println("\n\n\nЯ свободен");
 
                 // Говорим серверу что готовы принимать сообщения от
                 person.send_I_Am_FreeFor(
@@ -65,11 +80,13 @@ public class Cook implements Runnable {
                 str = person.readMessage();
 
                 MessageWrapper messageWrapperFrom = MessageWrapper.deserialize(str);
+                Message message = messageWrapperFrom.getMessage();
 
                 System.out.println("i got message from " +
                         messageWrapperFrom.getFromPerson_last().getPersonType());
+                Thread.sleep(_1000);
 
-                Message message = messageWrapperFrom.getMessage();
+
                 String order = message.getMessage();
                 // ПИЦЦА
                 if (order.contains("pizza")) {
@@ -79,9 +96,7 @@ public class Cook implements Runnable {
                     {
                         messResource = new MessResource(
                                 new ArrayList<Integer>() {{
-                                    add(resource_1);
-                                    add(resource_2);
-                                    add(7);
+                                    addAll(needResourcesList);
                                 }},
                                 ResourceType.NEED
                         );
@@ -102,6 +117,8 @@ public class Cook implements Runnable {
                         messageWrapperResource.init();
                         messageWrapperResource.history_List.add(from_to);
                     }
+                    System.out.println("Запрашиваю ресурсы у сервера");
+                    Thread.sleep(_1000);
                     person.send(messageWrapperResource.serialize());
 
                     // Говорим серваку, что мы можем принять только ресурсы от самого сервера
@@ -113,30 +130,30 @@ public class Cook implements Runnable {
                             }
                     );
                     str = person.readMessage();
-
-
                     // Проверяем что ресурсы пришли нужные
 
 
                     // Получил ресурсы, готовлю
-                    System.out.println("Я получил нужные мне ресурсы");
+                    System.out.println("Получил от сервера необходимые ресурсы");
+                    Thread.sleep(_1000);
+
                     // готовлю
-                    System.out.println("Готовлю");
-                    this.person.working(2);
-                    System.out.println("Приготовил");
+                    System.out.println("\n\t\t\tНачинаю готовить");
+                    Thread.sleep(_1000);
+                    this.person.working(10);
+                    System.out.println("\t\t\tПриготовил\n");
+                    Thread.sleep(_1000);
 
 
                     // Возвращаю ресурсы серверу
                     System.out.println("Возвращаю ресурсы серверу");
-                    this.person.working(2);
+                    Thread.sleep(_1000);
                     MessResource messResourceReturn = null;
                     MessageWrapper messageWrapperResourceReturn = null;
                     {
                         messResourceReturn = new MessResource(
                                 new ArrayList<Integer>() {{
-                                    add(resource_1);
-                                    add(resource_2);
-                                    add(7);
+                                    addAll(needResourcesList);
                                 }},
                                 ResourceType.RETURN
                         );
@@ -159,9 +176,12 @@ public class Cook implements Runnable {
                     }
                     person.send(messageWrapperResourceReturn.serialize());
                     System.out.println("Ресурсы отправлены на сервер");
+                    Thread.sleep(_1000);
 
 
                     // Отправляю заказ
+                    System.out.println("Передаю готовый заказ курьеру");
+                    Thread.sleep(_1000);
                     Message message_Gotoviy = null;
                     MessageWrapper messageWrapper_Gotoviy = null;
                     {
@@ -188,28 +208,16 @@ public class Cook implements Runnable {
                         messageWrapper_Gotoviy.history_List.add(from_to);
                     }
                     person.send(messageWrapper_Gotoviy.serialize());
+
+                    System.out.println("Сообщение курьеру отправлено");
+                    Thread.sleep(_1000);
                 }
-
-                // Говорим серверу что готовы принимать сообщения от
-                person.send_I_Am_FreeFor(
-                        new ArrayList<PersonType>() {
-                            {
-                                add(PersonType.DISPATCHER);
-                            }
-                        }
-                );
-
-
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-//        catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
     }
 
 

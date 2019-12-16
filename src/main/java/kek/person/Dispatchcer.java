@@ -17,6 +17,7 @@ public class Dispatchcer implements Runnable {
 
 
     private Person person;
+    private Integer _1000 = 500;
 
 
     public static void main(String[] args) throws JsonProcessingException {
@@ -28,6 +29,7 @@ public class Dispatchcer implements Runnable {
     public Dispatchcer() {
         try {
             person = new Person(PersonType.DISPATCHER, "BATYA");
+            person.set_1000(this._1000);
             person.socketChannel =
                     SocketChannel.open(new InetSocketAddress("localhost", 3443));
         } catch (IOException e) {
@@ -52,7 +54,8 @@ public class Dispatchcer implements Runnable {
         // Начинается рабочий цикл
         try {
             while (true) {
-
+                System.out.println("\n\n\nЯ свободен");
+                Thread.sleep(_1000);
                 // Говорим серверу, что готовы принимать сообщения от
                 person.send_I_Am_FreeFor(
                         new ArrayList<PersonType>() {
@@ -65,19 +68,23 @@ public class Dispatchcer implements Runnable {
                 );
 
                 str = person.readMessage();
+
                 MessageWrapper messageWrapperFrom = MessageWrapper.deserialize(str);
+
                 System.out.println("i got message from " +
                         messageWrapperFrom.getFromPerson_last().getPersonType());
+                Thread.sleep(_1000);
+
                 // Смотрим от кого пришло сообщение
                 switch (messageWrapperFrom.getFromPerson_last().getPersonType()) {
                     case BUYER: {
                         Message messageFromBuyer = messageWrapperFrom.getMessage();
-                        System.out.println("Он хочет : " + messageFromBuyer.getMessage());
+                        System.out.println("Покупатель хочет : " + messageFromBuyer.getMessage());
+                        Thread.sleep(_1000);
 
                         // Передаем сообщение повару
                         System.out.println("Передаю сообщение повару");
-                        this.person.working(5);
-
+                        this.person.working(3);
                         // Шлем ответ Любому повару
                         Message messageTo = null;
                         MessageWrapper messageWrapperToCook = null;
@@ -105,7 +112,7 @@ public class Dispatchcer implements Runnable {
                         this.person.send(messageWrapperToCook.serialize());
 
                         System.out.println("Сообщение Повару Отправлено");
-
+                        Thread.sleep(_1000);
                         break;
                     }
                     case COURIER: {
@@ -115,30 +122,6 @@ public class Dispatchcer implements Runnable {
                         break;
                     }
                 }
-
-                // Говорим серверу, что готовы принимать сообщения от
-                person.send_I_Am_FreeFor(
-                        new ArrayList<PersonType>() {
-                            {
-                                add(PersonType.BUYER);
-                                add(PersonType.COOK);
-                                add(PersonType.COURIER);
-                            }
-                        }
-                );
-                System.out.println("i send I_AM_FREE");
-
-//                str = person.readMessage();
-////
-////                System.out.println("[" + (LocalDateTime.now().toLocalTime().toString()) + "]" +
-////                        "i got = " + str);
-////                System.out.println("i sleep");
-////                Thread.sleep(10000);
-////                System.out.println("i wake up");
-////
-////                person.send_I_Am_FreeFor();
-////                System.out.println("i send I_AM_FREE");
-
             }
         } catch (JsonProcessingException e) {
             e.printStackTrace();

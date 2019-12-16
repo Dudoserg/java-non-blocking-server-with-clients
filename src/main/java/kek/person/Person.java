@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -30,6 +31,8 @@ public class Person {
 
     protected Integer port;
 
+    @JsonIgnore
+    protected Integer _1000;
 
     public Person(PersonType personType, String personName) {
         this.personType = personType;
@@ -202,7 +205,15 @@ public class Person {
     @JsonIgnore
     public void send_I_Am_FreeFor(List<PersonType> list) throws JsonProcessingException {
         MessageFreeForPersonType message = new MessageFreeForPersonType(list,port, this);
-        System.out.println("\n\nЖду какого-либо сообщения\t от " + message);
+        System.out.println("\n\tЖду какого-либо сообщения\t от " +
+                "[ " +
+                message.getList().stream()
+                        .map( Object::toString )
+                        .collect( Collectors.joining( ", " ) ) +
+                " ]\n"
+        );
+
+
 
         sendMessageFreeForPersonType(message);
 
@@ -243,7 +254,7 @@ public class Person {
             System.out.print("\r                                                    ");
             System.out.print("\r");
             System.out.print("Осталось : " + i + " сек.");
-            Thread.sleep(1000);
+            Thread.sleep( this._1000);
         }
         System.out.println("Закончил");
     }

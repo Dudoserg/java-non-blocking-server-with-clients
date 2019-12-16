@@ -29,41 +29,13 @@
                 </configuration>
             </plugin>
 
-            <!--Client-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>EchoClient</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>kek.person.EchoClient</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>EchoClient</finalName>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
             <!--Server-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>EchoServer</id>
+                        <id>Server</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
